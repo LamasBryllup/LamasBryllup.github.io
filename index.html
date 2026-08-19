@@ -1,1 +1,582 @@
-<h1>Lau & Amalie</h1><p>Our wedding site is coming soon!</p>
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lau &amp; Amalie</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#F8F4EA;
+    --beige:#E8DEC4;
+    --sage:#8A9A7E;
+    --forest:#3F4A38;
+    --gold:#B8923F;
+    --text:#3B3226;
+    --line:rgba(63,74,56,0.18);
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+
+  html{scroll-behavior:smooth;}
+
+  body{
+    background:var(--cream);
+    color:var(--text);
+    font-family:'Jost',sans-serif;
+    font-weight:300;
+    line-height:1.6;
+    overflow-x:hidden;
+  }
+
+  h1,h2,h3,.script{
+    font-family:'Cormorant Garamond',serif;
+    font-weight:500;
+    color:var(--forest);
+  }
+
+  a{color:inherit;}
+
+  /* ---------- Botanical sprig signature (reused as divider) ---------- */
+  .sprig{
+    display:block;
+    width:64px;
+    height:64px;
+    margin:0 auto;
+    opacity:0.85;
+  }
+  .sprig path{
+    stroke:var(--sage);
+    stroke-width:2;
+    fill:none;
+    stroke-linecap:round;
+  }
+  .sprig .leaf{fill:var(--sage);stroke:none;opacity:0.85;}
+
+  /* ---------- Password gate ---------- */
+  #gate{
+    position:fixed;
+    inset:0;
+    background:var(--forest);
+    color:var(--cream);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:999;
+    text-align:center;
+    padding:24px;
+    transition:opacity 0.6s ease, visibility 0.6s ease;
+  }
+  #gate.hidden{opacity:0;visibility:hidden;pointer-events:none;}
+  #gate .sprig path{stroke:var(--beige);}
+  #gate .sprig .leaf{fill:var(--beige);}
+  #gate-box{max-width:360px;width:100%;}
+  #gate h1{
+    color:var(--cream);
+    font-size:2.4rem;
+    margin:18px 0 6px;
+    letter-spacing:0.02em;
+  }
+  #gate p{
+    color:var(--beige);
+    font-size:0.95rem;
+    margin-bottom:22px;
+    letter-spacing:0.03em;
+  }
+  #gate-form{display:flex;flex-direction:column;gap:12px;}
+  #gate input[type="password"]{
+    background:transparent;
+    border:1px solid var(--beige);
+    color:var(--cream);
+    padding:12px 16px;
+    font-family:'Jost',sans-serif;
+    font-size:1rem;
+    text-align:center;
+    letter-spacing:0.08em;
+    border-radius:2px;
+  }
+  #gate input[type="password"]::placeholder{color:rgba(248,244,234,0.5);}
+  #gate button{
+    background:var(--gold);
+    color:var(--forest);
+    border:none;
+    padding:12px 16px;
+    font-family:'Jost',sans-serif;
+    font-weight:500;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    font-size:0.8rem;
+    cursor:pointer;
+    border-radius:2px;
+    transition:background 0.3s ease;
+  }
+  #gate button:hover{background:#cba64f;}
+  #gate-error{
+    color:#e2b3a3;
+    font-size:0.85rem;
+    min-height:1.2em;
+    letter-spacing:0.02em;
+  }
+
+  /* ---------- Layout shell ---------- */
+  #site{visibility:hidden;}
+  #site.show{visibility:visible;}
+
+  section{
+    padding:90px 24px;
+    max-width:760px;
+    margin:0 auto;
+  }
+
+  .eyebrow{
+    font-family:'Jost',sans-serif;
+    text-transform:uppercase;
+    letter-spacing:0.22em;
+    font-size:0.72rem;
+    color:var(--gold);
+    text-align:center;
+    margin-bottom:14px;
+  }
+
+  h2{
+    font-size:2.1rem;
+    text-align:center;
+    margin-bottom:8px;
+  }
+
+  .section-intro{
+    text-align:center;
+    max-width:480px;
+    margin:0 auto 46px;
+    color:#5a5041;
+    font-size:1rem;
+  }
+
+  /* ---------- Hero ---------- */
+  #hero{
+    min-height:100svh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    position:relative;
+    padding:40px 24px;
+    background:
+      radial-gradient(ellipse at top, rgba(138,154,126,0.14), transparent 60%),
+      radial-gradient(ellipse at bottom, rgba(184,146,63,0.10), transparent 55%),
+      var(--cream);
+  }
+  #hero .eyebrow{margin-bottom:22px;}
+  #hero h1{
+    font-size:clamp(2.8rem,9vw,4.6rem);
+    line-height:1.05;
+    letter-spacing:0.01em;
+  }
+  #hero .amp{
+    display:block;
+    font-style:italic;
+    font-size:0.5em;
+    color:var(--gold);
+    margin:6px 0;
+  }
+  #hero .date-line{
+    margin-top:26px;
+    font-size:1.1rem;
+    letter-spacing:0.05em;
+    color:var(--forest);
+  }
+  #hero .sprig{margin-top:34px;}
+  #hero .scroll-cue{
+    position:absolute;
+    bottom:32px;
+    font-size:0.7rem;
+    letter-spacing:0.2em;
+    text-transform:uppercase;
+    color:#8a8067;
+  }
+
+  /* ---------- Divider ---------- */
+  .divider{
+    display:flex;
+    align-items:center;
+    gap:18px;
+    max-width:360px;
+    margin:0 auto 50px;
+  }
+  .divider .line{flex:1;height:1px;background:var(--line);}
+  .divider .sprig{width:34px;height:34px;margin:0;}
+
+  /* ---------- Programme / timeline ---------- */
+  .timeline{
+    position:relative;
+    padding-left:28px;
+    border-left:1px solid var(--line);
+  }
+  .t-item{
+    position:relative;
+    padding-bottom:34px;
+  }
+  .t-item:last-child{padding-bottom:0;}
+  .t-item::before{
+    content:'';
+    position:absolute;
+    left:-33px;
+    top:4px;
+    width:9px;
+    height:9px;
+    border-radius:50%;
+    background:var(--gold);
+  }
+  .t-time{
+    font-family:'Cormorant Garamond',serif;
+    font-size:1.3rem;
+    color:var(--forest);
+    margin-bottom:2px;
+  }
+  .t-label{
+    font-size:0.95rem;
+    color:#5a5041;
+  }
+
+  /* ---------- Venue ---------- */
+  .venue-card{
+    background:var(--beige);
+    border-radius:4px;
+    padding:38px 32px;
+    text-align:center;
+  }
+  .venue-card h3{font-size:1.6rem;margin-bottom:6px;}
+  .venue-card p{color:#5a5041;margin-bottom:4px;}
+  .venue-card .map-btn{
+    display:inline-block;
+    margin-top:18px;
+    padding:10px 22px;
+    border:1px solid var(--forest);
+    border-radius:2px;
+    font-size:0.8rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    text-decoration:none;
+    color:var(--forest);
+    transition:background 0.3s ease,color 0.3s ease;
+  }
+  .venue-card .map-btn:hover{background:var(--forest);color:var(--cream);}
+
+  /* ---------- RSVP ---------- */
+  #rsvp{text-align:center;}
+  .rsvp-btn{
+    display:inline-block;
+    background:var(--forest);
+    color:var(--cream) !important;
+    text-decoration:none;
+    padding:16px 40px;
+    border-radius:2px;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    font-size:0.82rem;
+    font-weight:500;
+    transition:background 0.3s ease;
+  }
+  .rsvp-btn:hover{background:#2f382a;}
+  .rsvp-deadline{
+    margin-top:16px;
+    font-size:0.85rem;
+    color:#8a8067;
+    letter-spacing:0.03em;
+  }
+
+  /* ---------- FAQ ---------- */
+  .faq-item{
+    border-bottom:1px solid var(--line);
+  }
+  .faq-item:first-child{border-top:1px solid var(--line);}
+  .faq-q{
+    width:100%;
+    background:none;
+    border:none;
+    text-align:left;
+    padding:20px 4px;
+    font-family:'Cormorant Garamond',serif;
+    font-size:1.25rem;
+    color:var(--forest);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    cursor:pointer;
+  }
+  .faq-q .icon{
+    font-family:'Jost',sans-serif;
+    font-size:1.2rem;
+    color:var(--gold);
+    transition:transform 0.3s ease;
+  }
+  .faq-item.open .faq-q .icon{transform:rotate(45deg);}
+  .faq-a{
+    max-height:0;
+    overflow:hidden;
+    transition:max-height 0.35s ease;
+    color:#5a5041;
+    font-size:0.95rem;
+  }
+  .faq-a-inner{padding:0 4px 20px;}
+  .faq-item.open .faq-a{max-height:220px;}
+
+  /* ---------- Gallery ---------- */
+  .gallery-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:10px;
+  }
+  .gallery-grid div{
+    aspect-ratio:1;
+    background:var(--beige);
+    border-radius:3px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#a8996f;
+    font-size:0.7rem;
+    letter-spacing:0.05em;
+    text-align:center;
+    padding:8px;
+  }
+  .gallery-grid div:nth-child(3n+2){background:#e2d7b8;}
+  .gallery-grid div:nth-child(3n){background:#eee6cf;}
+
+  /* ---------- Extra info ---------- */
+  .info-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:28px;
+  }
+  .info-card h3{
+    font-size:1.3rem;
+    margin-bottom:8px;
+  }
+  .info-card p{
+    font-size:0.92rem;
+    color:#5a5041;
+  }
+
+  footer{
+    text-align:center;
+    padding:60px 24px 50px;
+    color:#8a8067;
+    font-size:0.85rem;
+    letter-spacing:0.04em;
+  }
+  footer .sprig{margin-bottom:18px;width:44px;height:44px;}
+
+  @media (max-width:600px){
+    section{padding:64px 20px;}
+    .gallery-grid{grid-template-columns:repeat(2,1fr);}
+    .info-grid{grid-template-columns:1fr;}
+  }
+
+  :focus-visible{outline:2px solid var(--gold);outline-offset:2px;}
+
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto;}
+    *{transition:none !important;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ PASSWORD GATE ============ -->
+<div id="gate">
+  <div id="gate-box">
+    <svg class="sprig" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+      <path d="M32 58 C32 40 32 24 32 6"></path>
+      <path class="leaf" d="M32 14 C24 12 18 16 16 24 C24 25 30 21 32 14 Z"></path>
+      <path class="leaf" d="M32 24 C40 22 46 26 48 34 C40 35 34 31 32 24 Z"></path>
+      <path class="leaf" d="M32 34 C24 32 18 36 16 44 C24 45 30 41 32 34 Z"></path>
+    </svg>
+    <h1>Lau &amp; Amalie</h1>
+    <p>Indtast adgangskoden fra jeres invitation</p>
+    <form id="gate-form">
+      <input type="password" id="gate-input" placeholder="Adgangskode" autocomplete="off">
+      <button type="submit">Åbn siden</button>
+      <div id="gate-error"></div>
+    </form>
+  </div>
+</div>
+
+<!-- ============ SITE ============ -->
+<div id="site">
+
+  <section id="hero">
+    <div class="eyebrow">Vi skal giftes</div>
+    <h1>Lau<span class="amp">&amp;</span>Amalie</h1>
+    <div class="date-line">Dato annonceres snart · 2027</div>
+    <svg class="sprig" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+      <path d="M32 58 C32 40 32 24 32 6"></path>
+      <path class="leaf" d="M32 14 C24 12 18 16 16 24 C24 25 30 21 32 14 Z"></path>
+      <path class="leaf" d="M32 24 C40 22 46 26 48 34 C40 35 34 31 32 24 Z"></path>
+      <path class="leaf" d="M32 34 C24 32 18 36 16 44 C24 45 30 41 32 34 Z"></path>
+    </svg>
+    <div class="scroll-cue">Scroll ned</div>
+  </section>
+
+  <div class="divider"><div class="line"></div><svg class="sprig" viewBox="0 0 64 64"><path d="M32 58 C32 40 32 24 32 6"></path><path class="leaf" d="M32 14 C24 12 18 16 16 24 C24 25 30 21 32 14 Z"></path><path class="leaf" d="M32 34 C24 32 18 36 16 44 C24 45 30 41 32 34 Z"></path></svg><div class="line"></div></div>
+
+  <!-- ============ PROGRAM ============ -->
+  <section id="program">
+    <div class="eyebrow">Dagens program</div>
+    <h2>Program</h2>
+    <p class="section-intro">Et foreløbigt overblik over dagen — de præcise tider følger, når det hele er på plads.</p>
+    <div class="timeline">
+      <div class="t-item"><div class="t-time">14:00</div><div class="t-label">Vielse</div></div>
+      <div class="t-item"><div class="t-time">15:00</div><div class="t-label">Reception med kaffe og kage</div></div>
+      <div class="t-item"><div class="t-time">17:30</div><div class="t-label">Middag</div></div>
+      <div class="t-item"><div class="t-time">21:00</div><div class="t-label">Fest og dans</div></div>
+    </div>
+  </section>
+
+  <div class="divider"><div class="line"></div><svg class="sprig" viewBox="0 0 64 64"><path d="M32 58 C32 40 32 24 32 6"></path><path class="leaf" d="M32 14 C24 12 18 16 16 24 C24 25 30 21 32 14 Z"></path><path class="leaf" d="M32 34 C24 32 18 36 16 44 C24 45 30 41 32 34 Z"></path></svg><div class="line"></div></div>
+
+  <!-- ============ VENUE ============ -->
+  <section id="sted">
+    <div class="eyebrow">Hvor</div>
+    <h2>Sted</h2>
+    <p class="section-intro">Vielse og fest afholdes samme sted.</p>
+    <div class="venue-card">
+      <h3>Sted annonceres snart</h3>
+      <p>Adresse følger</p>
+      <p>By, Postnummer</p>
+      <a class="map-btn" href="#" id="map-link">Se på kort</a>
+    </div>
+  </section>
+
+  <div class="divider"><div class="line"></div><svg class="sprig" viewBox="0 0 64 64"><path d="M32 58 C32 40 32 24 32 6"></path><path class="leaf" d="M32 14 C24 12 18 16 16 24 C24 25 30 21 32 14 Z"></path><path class="leaf" d="M32 34 C24 32 18 36 16 44 C24 45 30 41 32 34 Z"></path></svg><div class="line"></div></div>
+
+  <!-- ============ RSVP ============ -->
+  <section id="rsvp">
+    <div class="eyebrow">Vigtigt</div>
+    <h2>Tilmelding</h2>
+    <p class="section-intro">Vi glæder os til at fejre dagen med jer. Udfyld venligst tilmeldingen, så vi ved, hvem vi må forvente.</p>
+    <a class="rsvp-btn" href="https://docs.google.com/forms/d/e/1FAIpQLSfsbCEOmigCZ0HHDN15rsBDdKSxrJxsxi9oFG2nxGHgav50sg/viewform?usp=publish-editor" target="_blank" rel="noopener">Tilmeld dig her</a>
+    <div class="rsvp-deadline">Svarfrist annonceres snart</div>
+  </section>
+
+  <div class="divider"><div class="line"></div><svg class="sprig" viewBox="0 0 64 64"><path d="M32 58 C32 40 32 24 32 6"></path><path class="leaf" d="M32 14 C24 12 18 16 16 24 C24 25 30 21 32 14 Z"></path><path class="leaf" d="M32 34 C24 32 18 36 16 44 C24 45 30 41 32 34 Z"></path></svg><div class="line"></div></div>
+
+  <!-- ============ FAQ ============ -->
+  <section id="faq">
+    <div class="eyebrow">Godt at vide</div>
+    <h2>Spørgsmål &amp; svar</h2>
+    <div id="faq-list">
+      <div class="faq-item">
+        <button class="faq-q"><span>Hvad er dresscoden?</span><span class="icon">+</span></button>
+        <div class="faq-a"><div class="faq-a-inner">Festtøj / traditionel bryllupspåklædning. Vi skal både være udenfor og inde, så tag gerne noget varmt med til senere på aftenen.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q"><span>Må vi tage børn med?</span><span class="icon">+</span></button>
+        <div class="faq-a"><div class="faq-a-inner">Skriv det endelig i tilmeldingen, så vender vi tilbage hurtigst muligt.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q"><span>Ønsker I gaver?</span><span class="icon">+</span></button>
+        <div class="faq-a"><div class="faq-a-inner">Jeres tilstedeværelse er den bedste gave. Har I lyst til at give noget, må I meget gerne spørge os direkte.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q"><span>Er der transport eller parkering?</span><span class="icon">+</span></button>
+        <div class="faq-a"><div class="faq-a-inner">Detaljer om parkering og transport følger, når stedet er endeligt på plads.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"><div class="line"></div><svg class="sprig" viewBox="0 0 64 64"><path d="M32 58 C32 40 32 24 32 6"></path><path class="leaf" d="M32 14 C24 12 18 16 16 24 C24 25 30 21 32 14 Z"></path><path class="leaf" d="M32 34 C24 32 18 36 16 44 C24 45 30 41 32 34 Z"></path></svg><div class="line"></div></div>
+
+  <!-- ============ GALLERY ============ -->
+  <section id="billeder">
+    <div class="eyebrow">Minder</div>
+    <h2>Billeder</h2>
+    <p class="section-intro">Snart fyldt med billeder af os — indtil videre pladsholdere.</p>
+    <div class="gallery-grid">
+      <div>Billede 1</div><div>Billede 2</div><div>Billede 3</div>
+      <div>Billede 4</div><div>Billede 5</div><div>Billede 6</div>
+    </div>
+  </section>
+
+  <div class="divider"><div class="line"></div><svg class="sprig" viewBox="0 0 64 64"><path d="M32 58 C32 40 32 24 32 6"></path><path class="leaf" d="M32 14 C24 12 18 16 16 24 C24 25 30 21 32 14 Z"></path><path class="leaf" d="M32 34 C24 32 18 36 16 44 C24 45 30 41 32 34 Z"></path></svg><div class="line"></div></div>
+
+  <!-- ============ EXTRA INFO ============ -->
+  <section id="info">
+    <div class="eyebrow">Praktisk</div>
+    <h2>Ekstra information</h2>
+    <div class="info-grid">
+      <div class="info-card">
+        <h3>Overnatning</h3>
+        <p>Forslag til nærliggende hoteller og B&amp;B'er følger snarest.</p>
+      </div>
+      <div class="info-card">
+        <h3>Transport</h3>
+        <p>Info om kørsel, parkering og evt. delt transport følger.</p>
+      </div>
+      <div class="info-card">
+        <h3>Kontakt</h3>
+        <p>Spørgsmål? Skriv til os direkte — kontaktinfo følger her.</p>
+      </div>
+      <div class="info-card">
+        <h3>Vejret</h3>
+        <p>Vi krydser fingre for godt vejr — men tag gerne et ekstra lag med.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <svg class="sprig" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+      <path d="M32 58 C32 40 32 24 32 6"></path>
+      <path class="leaf" d="M32 14 C24 12 18 16 16 24 C24 25 30 21 32 14 Z"></path>
+      <path class="leaf" d="M32 34 C24 32 18 36 16 44 C24 45 30 41 32 34 Z"></path>
+    </svg>
+    Lau &amp; Amalie · 2027
+  </footer>
+
+</div>
+
+<script>
+  (function(){
+    var CORRECT = "Lama2027";
+    var gate = document.getElementById('gate');
+    var site = document.getElementById('site');
+    var form = document.getElementById('gate-form');
+    var input = document.getElementById('gate-input');
+    var error = document.getElementById('gate-error');
+
+    // remember unlock for this browser
+    if (sessionStorage && sessionStorage.getItem('wedding-unlocked') === 'yes') {
+      gate.classList.add('hidden');
+      site.classList.add('show');
+    }
+
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      if (input.value.trim().toLowerCase() === CORRECT.toLowerCase()) {
+        gate.classList.add('hidden');
+        site.classList.add('show');
+        try { sessionStorage.setItem('wedding-unlocked','yes'); } catch(err){}
+      } else {
+        error.textContent = "Forkert adgangskode — prøv igen.";
+        input.value = "";
+        input.focus();
+      }
+    });
+
+    // FAQ accordion
+    document.querySelectorAll('.faq-item').forEach(function(item){
+      item.querySelector('.faq-q').addEventListener('click', function(){
+        var wasOpen = item.classList.contains('open');
+        document.querySelectorAll('.faq-item').forEach(function(i){ i.classList.remove('open'); });
+        if (!wasOpen) item.classList.add('open');
+      });
+    });
+  })();
+</script>
+
+</body>
+</html>
+
