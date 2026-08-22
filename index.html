@@ -9,13 +9,30 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --cream:#DBD3BF;
-    --beige:#E8DEC4;
+    --cream:#E8DEC4;
+    --beige:#F3EDDD;
     --sage:#8A9A7E;
     --forest:#3F4A38;
     --gold:#8B6A22;
     --text:#3B3226;
+    --muted:#5a5041;
     --line:rgba(63,74,56,0.18);
+    color-scheme:light;
+  }
+
+  :root[data-theme="night"]{
+    --cream:#351E10;
+    --beige:#4A2C18;
+    --forest:#E8C888;
+    --gold:#D8A63F;
+    --text:#D9B87A;
+    --muted:#B99B66;
+    --line:rgba(216,179,106,0.25);
+    color-scheme:dark;
+  }
+
+  body, .venue-card, .gallery-grid div, .faq-item, .rsvp-btn, #theme-toggle, h1, h2, h3{
+    transition:background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
   }
 
   *{margin:0;padding:0;box-sizing:border-box;}
@@ -150,7 +167,7 @@
     text-align:center;
     max-width:480px;
     margin:0 auto 46px;
-    color:#5a5041;
+    color:var(--muted);
     font-size:1rem;
   }
 
@@ -195,7 +212,7 @@
     font-size:0.7rem;
     letter-spacing:0.2em;
     text-transform:uppercase;
-    color:#8a8067;
+    color:var(--muted);
   }
 
   /* ---------- Divider ---------- */
@@ -238,7 +255,7 @@
   }
   .t-label{
     font-size:0.95rem;
-    color:#5a5041;
+    color:var(--muted);
   }
 
   /* ---------- Venue ---------- */
@@ -249,7 +266,7 @@
     text-align:center;
   }
   .venue-card h3{font-size:1.6rem;margin-bottom:6px;}
-  .venue-card p{color:#5a5041;margin-bottom:4px;}
+  .venue-card p{color:var(--muted);margin-bottom:4px;}
   .venue-card .map-btn{
     display:inline-block;
     margin-top:18px;
@@ -280,11 +297,11 @@
     font-weight:500;
     transition:background 0.3s ease;
   }
-  .rsvp-btn:hover{background:#2f382a;}
+  .rsvp-btn:hover{filter:brightness(0.9);}
   .rsvp-deadline{
     margin-top:16px;
     font-size:0.85rem;
-    color:#8a8067;
+    color:var(--muted);
     letter-spacing:0.03em;
   }
 
@@ -318,7 +335,7 @@
     max-height:0;
     overflow:hidden;
     transition:max-height 0.35s ease;
-    color:#5a5041;
+    color:var(--muted);
     font-size:0.95rem;
   }
   .faq-a-inner{padding:0 4px 20px;}
@@ -337,14 +354,14 @@
     display:flex;
     align-items:center;
     justify-content:center;
-    color:#a8996f;
+    color:var(--muted);
     font-size:0.7rem;
     letter-spacing:0.05em;
     text-align:center;
     padding:8px;
   }
-  .gallery-grid div:nth-child(3n+2){background:#e2d7b8;}
-  .gallery-grid div:nth-child(3n){background:#eee6cf;}
+  .gallery-grid div:nth-child(3n+2){opacity:0.85;}
+  .gallery-grid div:nth-child(3n){opacity:0.7;}
 
   /* ---------- Extra info ---------- */
   .info-grid{
@@ -358,13 +375,13 @@
   }
   .info-card p{
     font-size:0.92rem;
-    color:#5a5041;
+    color:var(--muted);
   }
 
   footer{
     text-align:center;
     padding:60px 24px 50px;
-    color:#8a8067;
+    color:var(--muted);
     font-size:0.85rem;
     letter-spacing:0.04em;
   }
@@ -385,6 +402,28 @@
   }
   .ivy-left{left:0;}
   .ivy-right{right:0;transform:scaleX(-1);}
+
+  /* ---------- Day / night toggle ---------- */
+  #theme-toggle{
+    position:fixed;
+    top:18px;
+    right:18px;
+    z-index:50;
+    width:44px;
+    height:44px;
+    border-radius:50%;
+    border:1px solid var(--forest);
+    background:var(--cream);
+    color:var(--forest);
+    font-size:1.1rem;
+    line-height:1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    box-shadow:0 2px 8px rgba(0,0,0,0.10);
+  }
+  #theme-toggle:hover{filter:brightness(0.95);}
 
   @media (max-width:900px){
     .ivy-edge{display:none;}
@@ -430,6 +469,8 @@
 
   <div class="ivy-edge ivy-left"></div>
   <div class="ivy-edge ivy-right"></div>
+
+  <button id="theme-toggle" aria-label="Skift til nat" title="Skift mellem dag og nat">🌙</button>
 
   <section id="hero">
     <div class="eyebrow">Vi skal giftes</div>
@@ -576,6 +617,31 @@
         error.textContent = "Forkert adgangskode — prøv igen.";
         input.value = "";
         input.focus();
+      }
+    });
+
+    // Day / night toggle
+    var root = document.documentElement;
+    var themeBtn = document.getElementById('theme-toggle');
+    var savedTheme = null;
+    try { savedTheme = localStorage.getItem('wedding-theme'); } catch(err){}
+    if (savedTheme === 'night') {
+      root.setAttribute('data-theme','night');
+      themeBtn.textContent = '☀';
+      themeBtn.setAttribute('aria-label','Skift til dag');
+    }
+    themeBtn.addEventListener('click', function(){
+      var isNight = root.getAttribute('data-theme') === 'night';
+      if (isNight) {
+        root.removeAttribute('data-theme');
+        themeBtn.textContent = '🌙';
+        themeBtn.setAttribute('aria-label','Skift til nat');
+        try { localStorage.setItem('wedding-theme','day'); } catch(err){}
+      } else {
+        root.setAttribute('data-theme','night');
+        themeBtn.textContent = '☀';
+        themeBtn.setAttribute('aria-label','Skift til dag');
+        try { localStorage.setItem('wedding-theme','night'); } catch(err){}
       }
     });
 
