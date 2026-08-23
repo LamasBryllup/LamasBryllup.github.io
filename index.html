@@ -149,14 +149,15 @@
 
   .eyebrow{
     font-family:'Jost',sans-serif;
+    font-weight:500;
     text-transform:uppercase;
-    letter-spacing:0.22em;
-    font-size:0.72rem;
+    letter-spacing:0.2em;
+    font-size:0.9rem;
     color:var(--gold);
     text-align:center;
     margin-bottom:14px;
     text-decoration:underline;
-    text-underline-offset:4px;
+    text-underline-offset:5px;
   }
 
   h2{
@@ -423,6 +424,10 @@
     display:grid;
     grid-template-columns:repeat(3,1fr);
     gap:10px;
+  }
+  .gallery-cta{
+    text-align:center;
+    margin-top:26px;
   }
   .gallery-grid .tile{
     position:relative;
@@ -743,6 +748,9 @@
       <button class="tile" data-index="4"><span>Billede 5</span></button>
       <button class="tile" data-index="5"><span>Billede 6</span></button>
     </div>
+    <div class="gallery-cta">
+      <a class="map-btn" href="#" id="album-link" target="_blank" rel="noopener">Del jeres billeder</a>
+    </div>
   </section>
 
   <div id="lightbox">
@@ -767,6 +775,20 @@
   // ===== UPDATE THIS when the real date & time is set (24h format, local time) =====
   // Example: "2027-06-19T14:00:00". Set to null to hide the countdown & disable the calendar button.
   var WEDDING_DATE = "2027-06-19T14:00:00";
+
+  // ===== UPDATE THIS once your shared Google Photos album is created =====
+  // Paste the "anyone with the link can add photos" share link here. Leave as "#" until ready — the button will just be hidden.
+  var GUEST_ALBUM_LINK = "https://photos.app.goo.gl/KSxXREoQN4xBKjKS7";
+
+  (function(){
+    var albumBtn = document.getElementById('album-link');
+    if (!albumBtn) return;
+    if (GUEST_ALBUM_LINK && GUEST_ALBUM_LINK !== "#") {
+      albumBtn.href = GUEST_ALBUM_LINK;
+    } else {
+      albumBtn.style.display = "none";
+    }
+  })();
 
   // ===== Photo slider: add your photo filenames here (already uploaded to your "images" folder) =====
   var HERO_PHOTOS = [
