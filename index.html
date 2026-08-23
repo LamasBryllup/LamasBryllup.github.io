@@ -187,38 +187,68 @@
       radial-gradient(ellipse at bottom, rgba(184,146,63,0.10), transparent 55%),
       var(--cream);
   }
-  .hero-slideshow{position:absolute;inset:0;z-index:0;}
-  .hero-slideshow img{
+  .photo-slider{
+    position:relative;
+    width:250px;
+    margin:34px auto 0;
+  }
+  .slider-frame{
+    position:relative;
+    width:250px;
+    height:250px;
+    border-radius:18px;
+    overflow:hidden;
+    box-shadow:0 8px 24px rgba(0,0,0,0.15);
+    border:3px solid var(--beige);
+    background:var(--beige);
+  }
+  .slider-frame img{
     position:absolute;
     inset:0;
     width:100%;
     height:100%;
     object-fit:cover;
     opacity:0;
-    transition:opacity 1.6s ease;
-  }
-  .hero-slideshow img.active{opacity:1;}
-  .hero-scrim{
-    position:absolute;
-    inset:0;
-    z-index:1;
-    background:linear-gradient(180deg, rgba(30,20,10,0.32), rgba(30,20,10,0.48));
-    opacity:0;
     transition:opacity 1s ease;
   }
-  #hero.has-photos .hero-scrim{opacity:1;}
-  #hero > *:not(.hero-slideshow):not(.hero-scrim){position:relative;z-index:2;}
-  #hero.has-photos .eyebrow,
-  #hero.has-photos h1,
-  #hero.has-photos .date-line,
-  #hero.has-photos .countdown,
-  #hero.has-photos .scroll-cue{
-    color:#F8F4EA;
-    text-shadow:0 2px 12px rgba(0,0,0,0.35);
+  .slider-frame img.active{opacity:1;}
+  .slider-arrow{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    width:30px;
+    height:30px;
+    border-radius:50%;
+    background:rgba(0,0,0,0.35);
+    color:#fff;
+    border:none;
+    font-size:1.1rem;
+    line-height:1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    z-index:2;
   }
-  #hero.has-photos .amp{color:#E8C888;}
-  #hero.has-photos .sprig path{stroke:#F3EDDD;}
-  #hero.has-photos .sprig .leaf{fill:#F3EDDD;}
+  .slider-arrow:hover{background:rgba(0,0,0,0.55);}
+  .slider-arrow.prev{left:8px;}
+  .slider-arrow.next{right:8px;}
+  .slider-dots{
+    display:flex;
+    justify-content:center;
+    gap:8px;
+    margin-top:14px;
+  }
+  .slider-dots button{
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    border:none;
+    background:var(--line);
+    cursor:pointer;
+    padding:0;
+  }
+  .slider-dots button.active{background:var(--gold);}
   #hero .eyebrow{margin-bottom:22px;}
   #hero h1{
     font-size:clamp(2.8rem,9vw,4.6rem);
@@ -522,12 +552,17 @@
   <button id="theme-toggle" aria-label="Skift til nat" title="Skift mellem dag og nat">🌙</button>
 
   <section id="hero">
-    <div class="hero-slideshow"></div>
-    <div class="hero-scrim"></div>
     <div class="eyebrow">Vi skal giftes</div>
     <h1>Lau<span class="amp">&amp;</span>Amalie</h1>
     <div class="date-line">Dato annonceres snart · 2027</div>
     <div class="countdown" id="countdown"></div>
+    <div class="photo-slider">
+      <div class="slider-frame" id="slider-frame">
+        <button class="slider-arrow prev" id="slider-prev" aria-label="Forrige billede">&#8249;</button>
+        <button class="slider-arrow next" id="slider-next" aria-label="Næste billede">&#8250;</button>
+      </div>
+      <div class="slider-dots" id="slider-dots"></div>
+    </div>
     <svg class="sprig" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
       <path d="M32 58 C32 40 32 24 32 6"></path>
       <path class="leaf" d="M32 14 C24 12 18 16 16 24 C24 25 30 21 32 14 Z"></path>
@@ -652,7 +687,7 @@
   // Example: "2027-06-19T14:00:00". Set to null to hide the countdown & disable the calendar button.
   var WEDDING_DATE = "2027-06-19T14:00:00";
 
-  // ===== Hero slideshow: add your photo filenames here (upload them into an "images" folder in your repo) =====
+  // ===== Photo slider: add your photo filenames here (already uploaded to your "images" folder) =====
   var HERO_PHOTOS = [
     "images/hero-1.jpg",
     "images/hero-2.jpg",
@@ -660,34 +695,49 @@
   ];
 
   (function(){
-    var hero = document.getElementById('hero');
-    var container = document.querySelector('.hero-slideshow');
-    if (!hero || !container || !HERO_PHOTOS.length) return;
+    var frame = document.getElementById('slider-frame');
+    var dotsWrap = document.getElementById('slider-dots');
+    var prevBtn = document.getElementById('slider-prev');
+    var nextBtn = document.getElementById('slider-next');
+    if (!frame || !dotsWrap || !HERO_PHOTOS.length) return;
 
-    var loadedImgs = [];
+    var imgs = [];
+    var dots = [];
+    var idx = 0;
+    var timer;
 
-    HERO_PHOTOS.forEach(function(src){
+    HERO_PHOTOS.forEach(function(src, i){
       var img = document.createElement('img');
       img.src = src;
       img.alt = '';
-      img.addEventListener('load', function(){
-        container.appendChild(img);
-        loadedImgs.push(img);
-        if (loadedImgs.length === 1) {
-          img.classList.add('active');
-          hero.classList.add('has-photos');
-        }
-      });
-      // Silently ignored if the file isn't uploaded yet — hero just stays as-is.
+      frame.insertBefore(img, prevBtn);
+      imgs.push(img);
+
+      var dot = document.createElement('button');
+      dot.setAttribute('aria-label', 'Billede ' + (i + 1));
+      dot.addEventListener('click', function(){ goTo(i); resetTimer(); });
+      dotsWrap.appendChild(dot);
+      dots.push(dot);
     });
 
-    var idx = 0;
-    setInterval(function(){
-      if (loadedImgs.length < 2) return;
-      loadedImgs[idx].classList.remove('active');
-      idx = (idx + 1) % loadedImgs.length;
-      loadedImgs[idx].classList.add('active');
-    }, 5000);
+    function show(i){
+      imgs.forEach(function(im, k){ im.classList.toggle('active', k === i); });
+      dots.forEach(function(d, k){ d.classList.toggle('active', k === i); });
+    }
+    function goTo(i){
+      idx = (i + imgs.length) % imgs.length;
+      show(idx);
+    }
+    function next(){ goTo(idx + 1); }
+    function prev(){ goTo(idx - 1); }
+    function resetTimer(){
+      clearInterval(timer);
+      timer = setInterval(next, 5000);
+    }
+
+    if (imgs.length) { show(0); resetTimer(); }
+    if (prevBtn) prevBtn.addEventListener('click', function(){ prev(); resetTimer(); });
+    if (nextBtn) nextBtn.addEventListener('click', function(){ next(); resetTimer(); });
   })();
 
   (function(){
