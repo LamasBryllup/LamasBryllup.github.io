@@ -72,12 +72,12 @@
   }
   .sprig .leaf{fill:var(--sage);stroke:none;opacity:0.85;}
 
-  /* ---------- Password gate ---------- */
+  /* ---------- Password gate (fixed colors, independent of day/night) ---------- */
   #gate{
     position:fixed;
     inset:0;
-    background:var(--forest);
-    color:var(--cream);
+    background:#3F4A38;
+    color:#F8F4EA;
     display:flex;
     align-items:center;
     justify-content:center;
@@ -87,17 +87,17 @@
     transition:opacity 0.6s ease, visibility 0.6s ease;
   }
   #gate.hidden{opacity:0;visibility:hidden;pointer-events:none;}
-  #gate .sprig path{stroke:var(--beige);}
-  #gate .sprig .leaf{fill:var(--beige);}
+  #gate .sprig path{stroke:#E8DEC4;}
+  #gate .sprig .leaf{fill:#E8DEC4;}
   #gate-box{max-width:360px;width:100%;}
   #gate h1{
-    color:var(--cream);
+    color:#F8F4EA;
     font-size:2.4rem;
     margin:18px 0 6px;
     letter-spacing:0.02em;
   }
   #gate p{
-    color:var(--beige);
+    color:#E8DEC4;
     font-size:0.95rem;
     margin-bottom:22px;
     letter-spacing:0.03em;
@@ -105,8 +105,8 @@
   #gate-form{display:flex;flex-direction:column;gap:12px;}
   #gate input[type="password"]{
     background:transparent;
-    border:1px solid var(--beige);
-    color:var(--cream);
+    border:1px solid #E8DEC4;
+    color:#F8F4EA;
     padding:12px 16px;
     font-family:'Jost',sans-serif;
     font-size:1rem;
@@ -116,8 +116,8 @@
   }
   #gate input[type="password"]::placeholder{color:rgba(248,244,234,0.5);}
   #gate button{
-    background:var(--gold);
-    color:var(--forest);
+    background:#B8923F;
+    color:#3F4A38;
     border:none;
     padding:12px 16px;
     font-family:'Jost',sans-serif;
@@ -205,6 +205,12 @@
     letter-spacing:0.05em;
     color:var(--forest);
   }
+  #hero .countdown{
+    margin-top:8px;
+    font-size:0.9rem;
+    letter-spacing:0.04em;
+    color:var(--muted);
+  }
   #hero .sprig{margin-top:34px;}
   #hero .scroll-cue{
     position:absolute;
@@ -267,9 +273,15 @@
   }
   .venue-card h3{font-size:1.6rem;margin-bottom:6px;}
   .venue-card p{color:var(--muted);margin-bottom:4px;}
+  .venue-card .venue-actions{
+    display:flex;
+    gap:12px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin-top:18px;
+  }
   .venue-card .map-btn{
     display:inline-block;
-    margin-top:18px;
     padding:10px 22px;
     border:1px solid var(--forest);
     border-radius:2px;
@@ -480,6 +492,7 @@
     <div class="eyebrow">Vi skal giftes</div>
     <h1>Lau<span class="amp">&amp;</span>Amalie</h1>
     <div class="date-line">Dato annonceres snart · 2027</div>
+    <div class="countdown" id="countdown"></div>
     <svg class="sprig" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
       <path d="M32 58 C32 40 32 24 32 6"></path>
       <path class="leaf" d="M32 14 C24 12 18 16 16 24 C24 25 30 21 32 14 Z"></path>
@@ -511,7 +524,10 @@
       <h3>Sted annonceres snart</h3>
       <p>Adresse følger</p>
       <p>By, Postnummer</p>
-      <a class="map-btn" href="#" id="map-link">Se på kort</a>
+      <div class="venue-actions">
+        <a class="map-btn" href="#" id="map-link" target="_blank" rel="noopener">Se på kort</a>
+        <a class="map-btn" href="#" id="calendar-link">Tilføj til kalender</a>
+      </div>
     </div>
   </section>
 
@@ -596,6 +612,76 @@
 
 </div>
 
+<script>
+  // ===== UPDATE THIS when the real date & time is set (24h format, local time) =====
+  // Example: "2027-06-19T14:00:00". Set to null to hide the countdown & disable the calendar button.
+  var WEDDING_DATE = "2027-06-19T14:00:00";
+
+  (function(){
+    // Countdown
+    var countdownEl = document.getElementById('countdown');
+    if (WEDDING_DATE && countdownEl) {
+      var target = new Date(WEDDING_DATE);
+      if (!isNaN(target.getTime())) {
+        var diffMs = target - new Date();
+        if (diffMs <= 0) {
+          countdownEl.textContent = "I dag er den store dag! 🎉";
+        } else {
+          var days = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+          countdownEl.textContent = days + (days === 1 ? " dag til den store dag" : " dage til den store dag");
+        }
+      }
+    }
+
+    // Map link — builds automatically from whatever text is in the venue card
+    var mapLink = document.getElementById('map-link');
+    var card = document.querySelector('.venue-card');
+    if (mapLink && card) {
+      var bits = [];
+      card.querySelectorAll('h3, p').forEach(function(p){ bits.push(p.textContent.trim()); });
+      mapLink.href = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(bits.join(', '));
+    }
+
+    // Add to calendar — generates a .ics file using WEDDING_DATE + venue card text
+    var calLink = document.getElementById('calendar-link');
+    if (calLink) {
+      calLink.addEventListener('click', function(e){
+        e.preventDefault();
+        if (!WEDDING_DATE) {
+          alert('Datoen er endnu ikke fastsat — kalenderknappen virker, når WEDDING_DATE er udfyldt i koden.');
+          return;
+        }
+        function pad(n){ return n < 10 ? '0' + n : n; }
+        function toICS(d){
+          return d.getUTCFullYear() + pad(d.getUTCMonth()+1) + pad(d.getUTCDate()) + 'T' + pad(d.getUTCHours()) + pad(d.getUTCMinutes()) + pad(d.getUTCSeconds()) + 'Z';
+        }
+        var start = new Date(WEDDING_DATE);
+        var end = new Date(start.getTime() + 8 * 60 * 60 * 1000);
+        var location = card ? card.innerText.replace(/\s+/g,' ').trim() : '';
+        var ics = [
+          'BEGIN:VCALENDAR',
+          'VERSION:2.0',
+          'BEGIN:VEVENT',
+          'DTSTART:' + toICS(start),
+          'DTEND:' + toICS(end),
+          'SUMMARY:Lau & Amalies bryllup',
+          'LOCATION:' + location,
+          'END:VEVENT',
+          'END:VCALENDAR'
+        ].join('\r\n');
+        var blob = new Blob([ics], { type: 'text/calendar' });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = 'lau-amalie-bryllup.ics';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      });
+    }
+  })();
+</script>
 <script>
   (function(){
     var CORRECT = "Lama2027";
