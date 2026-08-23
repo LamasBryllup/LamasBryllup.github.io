@@ -424,21 +424,86 @@
     grid-template-columns:repeat(3,1fr);
     gap:10px;
   }
-  .gallery-grid div{
+  .gallery-grid .tile{
+    position:relative;
     aspect-ratio:1;
     background:var(--beige);
     border-radius:3px;
+    overflow:hidden;
     display:flex;
     align-items:center;
     justify-content:center;
     color:var(--muted);
+    font-family:inherit;
     font-size:0.7rem;
     letter-spacing:0.05em;
     text-align:center;
     padding:8px;
+    border:none;
+    cursor:default;
   }
-  .gallery-grid div:nth-child(3n+2){opacity:0.85;}
-  .gallery-grid div:nth-child(3n){opacity:0.7;}
+  .gallery-grid .tile img{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    opacity:0;
+    transition:opacity 0.6s ease, transform 0.3s ease;
+  }
+  .gallery-grid .tile.has-photo{cursor:pointer;}
+  .gallery-grid .tile.has-photo img{opacity:1;}
+  .gallery-grid .tile.has-photo span{display:none;}
+  .gallery-grid .tile.has-photo:hover img{transform:scale(1.05);}
+  .gallery-grid .tile:nth-child(3n+2){opacity:0.85;}
+  .gallery-grid .tile:nth-child(3n){opacity:0.7;}
+  .gallery-grid .tile.has-photo{opacity:1 !important;}
+
+  /* ---------- Lightbox ---------- */
+  #lightbox{
+    position:fixed;
+    inset:0;
+    z-index:1000;
+    background:rgba(20,14,8,0.88);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    opacity:0;
+    visibility:hidden;
+    transition:opacity 0.3s ease, visibility 0.3s ease;
+    padding:24px;
+  }
+  #lightbox.open{opacity:1;visibility:visible;}
+  #lightbox img{
+    max-width:90vw;
+    max-height:85vh;
+    border-radius:6px;
+    box-shadow:0 12px 40px rgba(0,0,0,0.4);
+  }
+  #lightbox .lb-close,
+  #lightbox .lb-arrow{
+    position:absolute;
+    background:rgba(255,255,255,0.12);
+    color:#fff;
+    border:1px solid rgba(255,255,255,0.35);
+    border-radius:50%;
+    width:42px;
+    height:42px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:1.3rem;
+    line-height:1;
+    cursor:pointer;
+  }
+  #lightbox .lb-close:hover,
+  #lightbox .lb-arrow:hover{background:rgba(255,255,255,0.24);}
+  #lightbox .lb-close{top:20px;right:20px;}
+  #lightbox .lb-arrow.prev{left:20px;top:50%;transform:translateY(-50%);}
+  #lightbox .lb-arrow.next{right:20px;top:50%;transform:translateY(-50%);}
+  @media (max-width:600px){
+    #lightbox .lb-arrow{width:36px;height:36px;font-size:1.1rem;}
+  }
 
   /* ---------- Extra info ---------- */
   .info-grid{
@@ -517,6 +582,9 @@
   }
 
   :focus-visible{outline:2px solid var(--gold);outline-offset:2px;}
+
+  .reveal{opacity:0;transform:translateY(26px);transition:opacity 0.8s ease, transform 0.8s ease;}
+  .reveal.reveal-visible{opacity:1;transform:translateY(0);}
 
   @media (prefers-reduced-motion:reduce){
     html{scroll-behavior:auto;}
@@ -667,11 +735,22 @@
     <div class="eyebrow">Minder</div>
     <h2>Billeder</h2>
     <p class="section-intro">Snart fyldt med billeder af os — indtil videre pladsholdere.</p>
-    <div class="gallery-grid">
-      <div>Billede 1</div><div>Billede 2</div><div>Billede 3</div>
-      <div>Billede 4</div><div>Billede 5</div><div>Billede 6</div>
+    <div class="gallery-grid" id="gallery-grid">
+      <button class="tile" data-index="0"><span>Billede 1</span></button>
+      <button class="tile" data-index="1"><span>Billede 2</span></button>
+      <button class="tile" data-index="2"><span>Billede 3</span></button>
+      <button class="tile" data-index="3"><span>Billede 4</span></button>
+      <button class="tile" data-index="4"><span>Billede 5</span></button>
+      <button class="tile" data-index="5"><span>Billede 6</span></button>
     </div>
   </section>
+
+  <div id="lightbox">
+    <button class="lb-close" id="lb-close" aria-label="Luk">&times;</button>
+    <button class="lb-arrow prev" id="lb-prev" aria-label="Forrige billede">&#8249;</button>
+    <img id="lb-img" src="" alt="">
+    <button class="lb-arrow next" id="lb-next" aria-label="Næste billede">&#8250;</button>
+  </div>
 
   <footer>
     <svg class="sprig" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
@@ -872,6 +951,101 @@
         if (!wasOpen) item.classList.add('open');
       });
     });
+  })();
+
+  // ===== Gallery photos: add filenames here (upload into your "images" folder, same as the hero photos) =====
+  var GALLERY_PHOTOS = [
+    "images/gallery-1.jpg",
+    "images/gallery-2.jpg",
+    "images/gallery-3.jpg",
+    "images/gallery-4.jpg",
+    "images/gallery-5.jpg",
+    "images/gallery-6.jpg"
+  ];
+
+  (function(){
+    var tiles = document.querySelectorAll('#gallery-grid .tile');
+    var loaded = {}; // index -> src, only photos that actually loaded
+
+    tiles.forEach(function(tile, i){
+      var src = GALLERY_PHOTOS[i];
+      if (!src) return;
+      var img = new Image();
+      img.src = src;
+      img.alt = '';
+      img.addEventListener('load', function(){
+        tile.insertBefore(img, tile.firstChild);
+        tile.classList.add('has-photo');
+        loaded[i] = src;
+      });
+      // Not uploaded yet? Tile just keeps showing its "Billede N" placeholder text.
+    });
+
+    // Lightbox
+    var lightbox = document.getElementById('lightbox');
+    var lbImg = document.getElementById('lb-img');
+    var lbClose = document.getElementById('lb-close');
+    var lbPrev = document.getElementById('lb-prev');
+    var lbNext = document.getElementById('lb-next');
+    var currentIndex = null;
+
+    function openAt(i){
+      var keys = Object.keys(loaded).map(Number).sort(function(a,b){return a-b;});
+      if (!keys.length || loaded[i] === undefined) return;
+      currentIndex = i;
+      lbImg.src = loaded[i];
+      lightbox.classList.add('open');
+    }
+    function closeLightbox(){
+      lightbox.classList.remove('open');
+      currentIndex = null;
+    }
+    function step(dir){
+      var keys = Object.keys(loaded).map(Number).sort(function(a,b){return a-b;});
+      if (!keys.length || currentIndex === null) return;
+      var pos = keys.indexOf(currentIndex);
+      pos = (pos + dir + keys.length) % keys.length;
+      openAt(keys[pos]);
+    }
+
+    tiles.forEach(function(tile, i){
+      tile.addEventListener('click', function(){ openAt(i); });
+    });
+    lbClose.addEventListener('click', closeLightbox);
+    lbPrev.addEventListener('click', function(){ step(-1); });
+    lbNext.addEventListener('click', function(){ step(1); });
+    lightbox.addEventListener('click', function(e){
+      if (e.target === lightbox) closeLightbox();
+    });
+    document.addEventListener('keydown', function(e){
+      if (!lightbox.classList.contains('open')) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowLeft') step(-1);
+      if (e.key === 'ArrowRight') step(1);
+    });
+  })();
+
+  // ===== Subtle scroll-in reveal for each section =====
+  (function(){
+    var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion) return;
+
+    var targets = document.querySelectorAll('section:not(#hero)');
+    targets.forEach(function(el){ el.classList.add('reveal'); });
+
+    if (!('IntersectionObserver' in window)) {
+      targets.forEach(function(el){ el.classList.add('reveal-visible'); });
+      return;
+    }
+    var observer = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting) {
+          entry.target.classList.add('reveal-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    targets.forEach(function(el){ observer.observe(el); });
   })();
 </script>
 
