@@ -588,7 +588,7 @@
 
   :focus-visible{outline:2px solid var(--gold);outline-offset:2px;}
 
-  .reveal{opacity:0;transform:translateY(26px);transition:opacity 0.8s ease, transform 0.8s ease;}
+  .reveal{opacity:0;transform:translateY(56px);transition:opacity 1.15s ease, transform 1.15s ease;}
   .reveal.reveal-visible{opacity:1;transform:translateY(0);}
 
   @media (prefers-reduced-motion:reduce){
@@ -1066,7 +1066,7 @@
           observer.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.12 });
+    }, { threshold: 0.08, rootMargin: '0px 0px -8% 0px' });
     targets.forEach(function(el){ observer.observe(el); });
   })();
 </script>
