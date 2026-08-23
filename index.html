@@ -207,7 +207,7 @@
     transition:opacity 1s ease;
   }
   #hero.has-photos .hero-scrim{opacity:1;}
-  #hero > *{position:relative;z-index:2;}
+  #hero > *:not(.hero-slideshow):not(.hero-scrim){position:relative;z-index:2;}
   #hero.has-photos .eyebrow,
   #hero.has-photos h1,
   #hero.has-photos .date-line,
