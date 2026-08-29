@@ -588,6 +588,11 @@
     border:none;
     background:none;
     padding:0;
+    margin:0;
+    line-height:0;
+    display:flex;
+    -webkit-appearance:none;
+    appearance:none;
     cursor:pointer;
   }
   #theme-toggle .track{
@@ -707,11 +712,11 @@
 
   <div class="theme-toggle-wrap">
     <svg class="toggle-frame" viewBox="0 0 116 70" xmlns="http://www.w3.org/2000/svg">
-      <rect x="4" y="4" width="108" height="62" rx="31" ry="31" fill="none" stroke="var(--gold)" stroke-width="1.4"></rect>
-      <path d="M9 35 C0 29 -6 34 -4 41 C4 41 9 37 9 35 Z" fill="var(--sage)"></path>
-      <path d="M9 35 C0 41 -6 36 -4 29 C4 29 9 33 9 35 Z" fill="var(--sage)"></path>
-      <path d="M107 35 C116 29 122 34 120 41 C112 41 107 37 107 35 Z" fill="var(--sage)"></path>
-      <path d="M107 35 C116 41 122 36 120 29 C112 29 107 33 107 35 Z" fill="var(--sage)"></path>
+      <rect x="6" y="6" width="104" height="58" rx="29" ry="29" fill="none" stroke="var(--gold)" stroke-width="1.4"></rect>
+      <path d="M11 35 C2 29 -4 34 -2 41 C6 41 11 37 11 35 Z" fill="var(--sage)"></path>
+      <path d="M11 35 C2 41 -4 36 -2 29 C6 29 11 33 11 35 Z" fill="var(--sage)"></path>
+      <path d="M105 35 C114 29 120 34 118 41 C110 41 105 37 105 35 Z" fill="var(--sage)"></path>
+      <path d="M105 35 C114 41 120 36 118 29 C110 29 105 33 105 35 Z" fill="var(--sage)"></path>
     </svg>
     <button id="theme-toggle" type="button" role="switch" aria-checked="false" aria-label="Skift til nat" title="Skift mellem dag og nat">
       <span class="track">
