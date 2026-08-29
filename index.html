@@ -383,6 +383,15 @@
     color:var(--muted);
     letter-spacing:0.03em;
   }
+  .rsvp-note{
+    margin-top:8px;
+    font-size:0.82rem;
+    color:var(--muted);
+    letter-spacing:0.02em;
+    max-width:380px;
+    margin-left:auto;
+    margin-right:auto;
+  }
 
   /* ---------- FAQ ---------- */
   .faq-item{
@@ -555,7 +564,7 @@
   #theme-toggle{
     position:fixed;
     top:18px;
-    right:96px;
+    right:110px;
     z-index:50;
     border:none;
     background:none;
@@ -564,43 +573,58 @@
   }
   #theme-toggle .track{
     position:relative;
-    width:64px;
-    height:32px;
-    border-radius:16px;
+    width:92px;
+    height:46px;
+    border-radius:23px;
     background:var(--beige);
-    border:1px solid var(--forest);
-    box-shadow:0 2px 8px rgba(0,0,0,0.10);
+    border:1.5px solid var(--forest);
+    box-shadow:0 3px 10px rgba(0,0,0,0.13);
     transition:background-color 0.3s ease, border-color 0.3s ease;
   }
   #theme-toggle .icon{
     position:absolute;
     top:50%;
     transform:translateY(-50%);
-    font-size:0.8rem;
+    font-size:1.15rem;
     opacity:0.55;
   }
-  #theme-toggle .icon.sun{left:7px;}
-  #theme-toggle .icon.moon{right:7px;}
+  #theme-toggle .icon.sun{left:11px;}
+  #theme-toggle .icon.moon{right:11px;}
   #theme-toggle .thumb{
     position:absolute;
-    top:2px;
-    left:2px;
-    width:26px;
-    height:26px;
+    top:3px;
+    left:3px;
+    width:38px;
+    height:38px;
     border-radius:50%;
     background:var(--forest);
     color:var(--cream);
     display:flex;
     align-items:center;
     justify-content:center;
-    font-size:0.85rem;
+    font-size:1.2rem;
     transition:transform 0.35s ease, background-color 0.3s ease, color 0.3s ease;
   }
-  #theme-toggle[aria-checked="true"] .thumb{transform:translateX(32px);}
+  #theme-toggle[aria-checked="true"] .thumb{transform:translateX(46px);}
   #theme-toggle:hover .thumb{filter:brightness(0.95);}
 
   @media (max-width:900px){
     #theme-toggle{right:18px;}
+    #theme-toggle .track{
+      width:44px;
+      height:44px;
+      border-radius:50%;
+      box-shadow:0 2px 8px rgba(0,0,0,0.10);
+    }
+    #theme-toggle .icon{display:none;}
+    #theme-toggle .thumb{
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      font-size:1.1rem;
+    }
+    #theme-toggle[aria-checked="true"] .thumb{transform:none;}
   }
 
   @media (max-width:900px){
@@ -689,6 +713,7 @@
     <p class="section-intro">Vi glæder os til at fejre dagen med jer. Udfyld venligst tilmeldingen, så vi ved, hvem vi må forvente.</p>
     <a class="rsvp-btn" href="https://docs.google.com/forms/d/e/1FAIpQLSfsbCEOmigCZ0HHDN15rsBDdKSxrJxsxi9oFG2nxGHgav50sg/viewform?usp=publish-editor" target="_blank" rel="noopener">Tilmeld dig her</a>
     <div class="rsvp-deadline">Svarfrist annonceres snart</div>
+    <div class="rsvp-note">Husk at krydse af i formularen, hvis du vil modtage opdateringer om brylluppet på mail.</div>
   </section>
 
   <div class="divider"><div class="line"></div><svg class="sprig" viewBox="0 0 64 64"><path d="M32 58 C32 40 32 24 32 6"></path><path class="leaf" d="M32 14 C24 12 18 16 16 24 C24 25 30 21 32 14 Z"></path><path class="leaf" d="M32 34 C24 32 18 36 16 44 C24 45 30 41 32 34 Z"></path></svg><div class="line"></div></div>
