@@ -143,6 +143,10 @@
   /* ---------- Layout shell ---------- */
   #site{visibility:hidden;}
   #site.show{visibility:visible;}
+  #site .only-g2{display:none;}
+  #site.group-g2 .only-g1{display:none;}
+  #site.group-g2 .only-g2{display:inline;}
+  #site.group-g2 a.only-g2{display:inline-block;}
 
   section{
     padding:90px 24px;
@@ -730,7 +734,7 @@
   <section id="hero">
     <div class="eyebrow">Vi skal giftes</div>
     <h1>Lau<span class="amp">&amp;</span>Amalie</h1>
-    <div class="date-line">Dato annonceres snart · 2027</div>
+    <div class="date-line">31. juli 2027</div>
     <div class="countdown" id="countdown"></div>
     <div class="photo-slider">
       <div class="slider-frame" id="slider-frame">
@@ -755,7 +759,8 @@
     <div class="eyebrow">Vigtigt</div>
     <h2>Tilmelding</h2>
     <p class="section-intro">Vi glæder os til at fejre dagen med jer. Udfyld venligst tilmeldingen, så vi ved, hvem vi må forvente.</p>
-    <a class="rsvp-btn" href="https://docs.google.com/forms/d/e/1FAIpQLSfsbCEOmigCZ0HHDN15rsBDdKSxrJxsxi9oFG2nxGHgav50sg/viewform?usp=publish-editor" target="_blank" rel="noopener">Tilmeld dig her</a>
+    <a class="rsvp-btn only-g1" href="https://docs.google.com/forms/d/e/1FAIpQLSfsbCEOmigCZ0HHDN15rsBDdKSxrJxsxi9oFG2nxGHgav50sg/viewform?usp=publish-editor" target="_blank" rel="noopener">Tilmeld dig her</a>
+    <a class="rsvp-btn only-g2" href="#" id="rsvp-link-g2" target="_blank" rel="noopener">Tilmeld dig her</a>
     <div class="rsvp-deadline">Svarfrist annonceres snart</div>
     <div class="rsvp-note">Husk at krydse af i formularen, hvis du vil modtage opdateringer om brylluppet på mail.</div>
   </section>
@@ -768,9 +773,9 @@
     <h2>Sted</h2>
     <p class="section-intro">Vielse og fest afholdes samme sted.</p>
     <div class="venue-card">
-      <h3>Sted annonceres snart</h3>
-      <p>Adresse følger</p>
-      <p>By, Postnummer</p>
+      <h3>Kongeportsvej 14</h3>
+      <p>9640 Farsø</p>
+      <p>Danmark</p>
       <div class="venue-actions">
         <a class="map-btn" href="#" id="map-link" target="_blank" rel="noopener">Se på kort</a>
         <a class="map-btn" href="#" id="calendar-link">Tilføj til kalender</a>
@@ -875,12 +880,15 @@
 
 <script>
   // ===== UPDATE THIS when the real date & time is set (24h format, local time) =====
-  // Example: "2027-06-19T14:00:00". Set to null to hide the countdown & disable the calendar button.
-  var WEDDING_DATE = "2027-06-19T14:00:00";
+  // Format: "YYYY-MM-DDTHH:MM:SS" (24h, local time). Set to null to hide the countdown & disable the calendar button.
+  var WEDDING_DATE = "2027-07-31T14:00:00";
 
   // ===== UPDATE THIS once your shared Google Photos album is created =====
   // Paste the "anyone with the link can add photos" share link here. Leave as "#" until ready — the button will just be hidden.
   var GUEST_ALBUM_LINK = "https://photos.app.goo.gl/KSxXREoQN4xBKjKS7";
+
+  // RSVP link for guest group G2 (password Telt123)
+  var RSVP_LINK_G2 = "https://forms.gle/RsBUy5WwXPn7ZiY67";
 
   (function(){
     var albumBtn = document.getElementById('album-link');
@@ -889,6 +897,19 @@
       albumBtn.href = GUEST_ALBUM_LINK;
     } else {
       albumBtn.style.display = "none";
+    }
+  })();
+
+  (function(){
+    var g2Btn = document.getElementById('rsvp-link-g2');
+    if (!g2Btn) return;
+    if (RSVP_LINK_G2 && RSVP_LINK_G2 !== "#") {
+      g2Btn.href = RSVP_LINK_G2;
+    } else {
+      g2Btn.addEventListener('click', function(e){
+        e.preventDefault();
+        alert('RSVP-linket til G2 er endnu ikke tilføjet.');
+      });
     }
   })();
 
@@ -1012,25 +1033,36 @@
 </script>
 <script>
   (function(){
-    var CORRECT = "Lama2027";
+    var PASSWORD_G1 = "Lama2027";  // G1 — all guests
+    var PASSWORD_G2 = "Telt123";   // G2 — small guest group
     var gate = document.getElementById('gate');
     var site = document.getElementById('site');
     var form = document.getElementById('gate-form');
     var input = document.getElementById('gate-input');
     var error = document.getElementById('gate-error');
 
-    // remember unlock for this browser
-    if (sessionStorage && sessionStorage.getItem('wedding-unlocked') === 'yes') {
+    function unlock(group){
       gate.classList.add('hidden');
       site.classList.add('show');
+      if (group === 'g2') site.classList.add('group-g2');
+      try {
+        sessionStorage.setItem('wedding-unlocked','yes');
+        sessionStorage.setItem('wedding-group', group);
+      } catch(err){}
+    }
+
+    // remember unlock for this browser
+    if (sessionStorage && sessionStorage.getItem('wedding-unlocked') === 'yes') {
+      unlock(sessionStorage.getItem('wedding-group') || 'g1');
     }
 
     form.addEventListener('submit', function(e){
       e.preventDefault();
-      if (input.value.trim().toLowerCase() === CORRECT.toLowerCase()) {
-        gate.classList.add('hidden');
-        site.classList.add('show');
-        try { sessionStorage.setItem('wedding-unlocked','yes'); } catch(err){}
+      var val = input.value.trim().toLowerCase();
+      if (val === PASSWORD_G1.toLowerCase()) {
+        unlock('g1');
+      } else if (val === PASSWORD_G2.toLowerCase()) {
+        unlock('g2');
       } else {
         error.textContent = "Forkert adgangskode — prøv igen.";
         input.value = "";
