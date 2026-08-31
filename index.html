@@ -19,6 +19,7 @@
     --muted:#5a5041;
     --line:rgba(63,74,56,0.18);
     --holder-bg:rgba(232,222,196,0.38);
+    --pm-text:#2B2015;
     color-scheme:light;
   }
 
@@ -31,6 +32,7 @@
     --muted:#B99B66;
     --line:rgba(216,179,106,0.25);
     --holder-bg:rgba(74,44,24,0.42);
+    --pm-text:#F5DDA0;
     color-scheme:dark;
   }
 
@@ -404,7 +406,7 @@
   #program-modal .pm-time{
     font-family:'Cormorant Garamond',serif;
     font-size:1.8rem;
-    color:var(--forest);
+    color:var(--pm-text);
   }
   #program-modal .pm-label{
     font-size:0.95rem;
@@ -423,7 +425,7 @@
   }
   #program-modal .pm-text{
     font-size:0.95rem;
-    color:var(--muted);
+    color:var(--pm-text);
     line-height:1.6;
   }
 
@@ -670,7 +672,7 @@
     opacity:0.6;
     background-repeat:repeat-y;
     background-size:64px auto;
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 170'%3E%3Cpath d='M32 0 C14 22 50 44 32 66 C14 88 50 110 32 132 C14 154 50 160 32 170' stroke='%233F4A38' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3Cpath d='M32 18 C18 12 6 18 8 30 C20 32 30 26 32 18 Z' fill='%238A9A7E'/%3E%3Cpath d='M32 54 C46 48 58 54 56 66 C44 68 34 62 32 54 Z' fill='%238A9A7E'/%3E%3Cpath d='M32 88 C18 82 6 88 8 100 C20 102 30 96 32 88 Z' fill='%238A9A7E'/%3E%3Cpath d='M32 122 C46 116 58 122 56 134 C44 136 34 130 32 122 Z' fill='%238A9A7E'/%3E%3Cpath d='M32 150 C18 145 8 150 9 160 C19 162 29 157 32 150 Z' fill='%238A9A7E'/%3E%3C/svg%3E");
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 170'%3E%3Cpath d='M32 0 C14 22 50 44 32 66 C14 88 50 110 32 132 C14 154 50 160 32 170' stroke='%233F4A38' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3Cpath d='M32 18 C24 14 14 16 8 22 C6 26 7 29 10 30 C13 27 12 24 16 22 C20 20 26 19 32 18 Z' fill='%238A9A7E'/%3E%3Cpath d='M32 54 C40 50 50 52 56 58 C58 62 57 65 54 66 C51 63 52 60 48 58 C44 56 38 55 32 54 Z' fill='%238A9A7E'/%3E%3Cpath d='M32 88 C24 84 14 86 8 92 C6 96 7 99 10 100 C13 97 12 94 16 92 C20 90 26 89 32 88 Z' fill='%238A9A7E'/%3E%3Cpath d='M32 122 C40 118 50 120 56 126 C58 130 57 133 54 134 C51 131 52 128 48 126 C44 124 38 123 32 122 Z' fill='%238A9A7E'/%3E%3Cpath d='M32 150 C25 146 16 148 11 153 C9 156 10 159 13 160 C15 157 14 155 18 153 C22 151 27 150 32 150 Z' fill='%238A9A7E'/%3E%3C/svg%3E");
   }
   .ivy-left{left:0;}
   .ivy-right{right:0;transform:scaleX(-1);}
@@ -803,9 +805,9 @@
   <div id="gate-box">
     <svg class="sprig" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
       <path d="M32 58 C32 40 32 24 32 6"></path>
-      <path class="leaf" d="M32 14 C24 12 18 16 16 24 C24 25 30 21 32 14 Z"></path>
-      <path class="leaf" d="M32 24 C40 22 46 26 48 34 C40 35 34 31 32 24 Z"></path>
-      <path class="leaf" d="M32 34 C24 32 18 36 16 44 C24 45 30 41 32 34 Z"></path>
+      <path class="leaf" d="M32 14 C26 11 20 11 16 15 C14 19 15 23 18 24 C20 22 19 19 22 18 C25 17 29 15 32 14 Z"></path>
+      <path class="leaf" d="M32 24 C38 21 44 21 48 25 C50 29 49 33 46 34 C44 32 45 29 42 28 C39 27 35 25 32 24 Z"></path>
+      <path class="leaf" d="M32 34 C26 31 20 31 16 35 C14 39 15 43 18 44 C20 42 19 39 22 38 C25 37 29 35 32 34 Z"></path>
     </svg>
     <h1>Lau &amp; Amalie</h1>
     <p>Indtast adgangskoden fra jeres invitation</p>
@@ -826,10 +828,10 @@
   <div class="theme-toggle-wrap">
     <svg class="toggle-frame" viewBox="0 0 116 70" xmlns="http://www.w3.org/2000/svg">
       <rect x="6" y="6" width="104" height="58" rx="29" ry="29" fill="none" stroke="var(--gold)" stroke-width="1.4"></rect>
-      <path d="M11 35 C2 29 -4 34 -2 41 C6 41 11 37 11 35 Z" fill="var(--sage)"></path>
-      <path d="M11 35 C2 41 -4 36 -2 29 C6 29 11 33 11 35 Z" fill="var(--sage)"></path>
-      <path d="M105 35 C114 29 120 34 118 41 C110 41 105 37 105 35 Z" fill="var(--sage)"></path>
-      <path d="M105 35 C114 41 120 36 118 29 C110 29 105 33 105 35 Z" fill="var(--sage)"></path>
+      <path d="M11 35 C7 30 1 30 -3 33 C-5 36 -4 39 -1 41 C1 38 0 36 3 35 C6 34 9 35 11 35 Z" fill="var(--sage)"></path>
+      <path d="M11 35 C7 40 1 40 -3 37 C-5 34 -4 31 -1 29 C1 32 0 34 3 35 C6 36 9 35 11 35 Z" fill="var(--sage)"></path>
+      <path d="M105 35 C109 30 115 30 119 33 C121 36 120 39 117 41 C115 38 116 36 113 35 C110 34 107 35 105 35 Z" fill="var(--sage)"></path>
+      <path d="M105 35 C109 40 115 40 119 37 C121 34 120 31 117 29 C115 32 116 34 113 35 C110 36 107 35 105 35 Z" fill="var(--sage)"></path>
     </svg>
     <button id="theme-toggle" type="button" role="switch" aria-checked="false" aria-label="Skift til nat" title="Skift mellem dag og nat">
       <span class="track">
@@ -854,14 +856,14 @@
     </div>
     <svg class="sprig" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
       <path d="M32 58 C32 40 32 24 32 6"></path>
-      <path class="leaf" d="M32 14 C24 12 18 16 16 24 C24 25 30 21 32 14 Z"></path>
-      <path class="leaf" d="M32 24 C40 22 46 26 48 34 C40 35 34 31 32 24 Z"></path>
-      <path class="leaf" d="M32 34 C24 32 18 36 16 44 C24 45 30 41 32 34 Z"></path>
+      <path class="leaf" d="M32 14 C26 11 20 11 16 15 C14 19 15 23 18 24 C20 22 19 19 22 18 C25 17 29 15 32 14 Z"></path>
+      <path class="leaf" d="M32 24 C38 21 44 21 48 25 C50 29 49 33 46 34 C44 32 45 29 42 28 C39 27 35 25 32 24 Z"></path>
+      <path class="leaf" d="M32 34 C26 31 20 31 16 35 C14 39 15 43 18 44 C20 42 19 39 22 38 C25 37 29 35 32 34 Z"></path>
     </svg>
     <div class="scroll-cue">Scroll ned</div>
   </section>
 
-  <div class="divider"><div class="line"></div><svg class="sprig" viewBox="0 0 64 64"><path d="M32 58 C32 40 32 24 32 6"></path><path class="leaf" d="M32 14 C24 12 18 16 16 24 C24 25 30 21 32 14 Z"></path><path class="leaf" d="M32 34 C24 32 18 36 16 44 C24 45 30 41 32 34 Z"></path></svg><div class="line"></div></div>
+  <div class="divider"><div class="line"></div><svg class="sprig" viewBox="0 0 64 64"><path d="M32 58 C32 40 32 24 32 6"></path><path class="leaf" d="M32 14 C26 11 20 11 16 15 C14 19 15 23 18 24 C20 22 19 19 22 18 C25 17 29 15 32 14 Z"></path><path class="leaf" d="M32 34 C26 31 20 31 16 35 C14 39 15 43 18 44 C20 42 19 39 22 38 C25 37 29 35 32 34 Z"></path></svg><div class="line"></div></div>
 
   <!-- ============ RSVP ============ -->
   <section id="rsvp">
@@ -873,7 +875,7 @@
     <div class="rsvp-deadline">Svarfrist annonceres snart</div>
   </section>
 
-  <div class="divider"><div class="line"></div><svg class="sprig" viewBox="0 0 64 64"><path d="M32 58 C32 40 32 24 32 6"></path><path class="leaf" d="M32 14 C24 12 18 16 16 24 C24 25 30 21 32 14 Z"></path><path class="leaf" d="M32 34 C24 32 18 36 16 44 C24 45 30 41 32 34 Z"></path></svg><div class="line"></div></div>
+  <div class="divider"><div class="line"></div><svg class="sprig" viewBox="0 0 64 64"><path d="M32 58 C32 40 32 24 32 6"></path><path class="leaf" d="M32 14 C26 11 20 11 16 15 C14 19 15 23 18 24 C20 22 19 19 22 18 C25 17 29 15 32 14 Z"></path><path class="leaf" d="M32 34 C26 31 20 31 16 35 C14 39 15 43 18 44 C20 42 19 39 22 38 C25 37 29 35 32 34 Z"></path></svg><div class="line"></div></div>
 
   <!-- ============ VENUE ============ -->
   <section id="sted">
@@ -892,14 +894,14 @@
     <div class="venue-card venue-photo" id="venue-party" style="background-image:url('images/venue.jpg');">
       <h3>Fest</h3>
       <p>Kongeportsvej 14</p>
-      <p>9640 Farsø</p>
+      <p>9640 Ertebølle</p>
       <div class="venue-actions">
-        <a class="map-btn" href="#" id="map-link-party" target="_blank" rel="noopener">Se på kort</a>
+        <a class="map-btn" href="https://maps.app.goo.gl/7xoh7avesdG4zhmv6" id="map-link-party" target="_blank" rel="noopener">Se på kort</a>
       </div>
     </div>
   </section>
 
-  <div class="divider"><div class="line"></div><svg class="sprig" viewBox="0 0 64 64"><path d="M32 58 C32 40 32 24 32 6"></path><path class="leaf" d="M32 14 C24 12 18 16 16 24 C24 25 30 21 32 14 Z"></path><path class="leaf" d="M32 34 C24 32 18 36 16 44 C24 45 30 41 32 34 Z"></path></svg><div class="line"></div></div>
+  <div class="divider"><div class="line"></div><svg class="sprig" viewBox="0 0 64 64"><path d="M32 58 C32 40 32 24 32 6"></path><path class="leaf" d="M32 14 C26 11 20 11 16 15 C14 19 15 23 18 24 C20 22 19 19 22 18 C25 17 29 15 32 14 Z"></path><path class="leaf" d="M32 34 C26 31 20 31 16 35 C14 39 15 43 18 44 C20 42 19 39 22 38 C25 37 29 35 32 34 Z"></path></svg><div class="line"></div></div>
 
   <!-- ============ PROGRAM ============ -->
   <section id="program">
@@ -968,7 +970,7 @@
     </div>
   </div>
 
-  <div class="divider"><div class="line"></div><svg class="sprig" viewBox="0 0 64 64"><path d="M32 58 C32 40 32 24 32 6"></path><path class="leaf" d="M32 14 C24 12 18 16 16 24 C24 25 30 21 32 14 Z"></path><path class="leaf" d="M32 34 C24 32 18 36 16 44 C24 45 30 41 32 34 Z"></path></svg><div class="line"></div></div>
+  <div class="divider"><div class="line"></div><svg class="sprig" viewBox="0 0 64 64"><path d="M32 58 C32 40 32 24 32 6"></path><path class="leaf" d="M32 14 C26 11 20 11 16 15 C14 19 15 23 18 24 C20 22 19 19 22 18 C25 17 29 15 32 14 Z"></path><path class="leaf" d="M32 34 C26 31 20 31 16 35 C14 39 15 43 18 44 C20 42 19 39 22 38 C25 37 29 35 32 34 Z"></path></svg><div class="line"></div></div>
 
   <!-- ============ PRAKTISK (merged FAQ + info) ============ -->
   <section id="info">
@@ -979,9 +981,12 @@
         <button class="faq-q"><span>Transport</span><span class="icon">+</span></button>
         <div class="faq-a"><div class="faq-a-inner">Ertebølle - Kongeportsvej 14 ligger ikke i nærheden af busruter eller anden offentlig transport. Vi anbefaler derfor, at I snakker sammen om fælles kørsel i bil derud.</div></div>
       </div>
-      <div class="faq-item only-g2">
+      <div class="faq-item">
         <button class="faq-q"><span>Overnatning</span><span class="icon">+</span></button>
-        <div class="faq-a"><div class="faq-a-inner">Når vi har fået svar fra alle der er blevet tilbudt at overnatte i sommerhuset, vil der blive uploadet et billede af en plantegning + ikon her, for hvor lige præcis du skal overnatte.</div></div>
+        <div class="faq-a"><div class="faq-a-inner">
+          <span class="only-g1">Ingen information på nuværende tidspunkt.</span>
+          <span class="only-g2">Når vi har fået svar fra alle der er blevet tilbudt at overnatte i sommerhuset, vil der blive uploadet et billede af en plantegning + ikon her, for hvor lige præcis du skal overnatte.</span>
+        </div></div>
       </div>
       <div class="faq-item">
         <button class="faq-q"><span>Toastmaster</span><span class="icon">+</span></button>
@@ -1010,7 +1015,7 @@
     </div>
   </section>
 
-  <div class="divider"><div class="line"></div><svg class="sprig" viewBox="0 0 64 64"><path d="M32 58 C32 40 32 24 32 6"></path><path class="leaf" d="M32 14 C24 12 18 16 16 24 C24 25 30 21 32 14 Z"></path><path class="leaf" d="M32 34 C24 32 18 36 16 44 C24 45 30 41 32 34 Z"></path></svg><div class="line"></div></div>
+  <div class="divider"><div class="line"></div><svg class="sprig" viewBox="0 0 64 64"><path d="M32 58 C32 40 32 24 32 6"></path><path class="leaf" d="M32 14 C26 11 20 11 16 15 C14 19 15 23 18 24 C20 22 19 19 22 18 C25 17 29 15 32 14 Z"></path><path class="leaf" d="M32 34 C26 31 20 31 16 35 C14 39 15 43 18 44 C20 42 19 39 22 38 C25 37 29 35 32 34 Z"></path></svg><div class="line"></div></div>
 
   <!-- ============ GALLERY ============ -->
   <section id="billeder">
@@ -1040,8 +1045,8 @@
   <footer>
     <svg class="sprig" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
       <path d="M32 58 C32 40 32 24 32 6"></path>
-      <path class="leaf" d="M32 14 C24 12 18 16 16 24 C24 25 30 21 32 14 Z"></path>
-      <path class="leaf" d="M32 34 C24 32 18 36 16 44 C24 45 30 41 32 34 Z"></path>
+      <path class="leaf" d="M32 14 C26 11 20 11 16 15 C14 19 15 23 18 24 C20 22 19 19 22 18 C25 17 29 15 32 14 Z"></path>
+      <path class="leaf" d="M32 34 C26 31 20 31 16 35 C14 39 15 43 18 44 C20 42 19 39 22 38 C25 37 29 35 32 34 Z"></path>
     </svg>
     Lau &amp; Amalie · 2027
   </footer>
@@ -1150,15 +1155,6 @@
           countdownEl.textContent = days + (days === 1 ? " dag til den store dag" : " dage til den store dag");
         }
       }
-    }
-
-    // Party venue map link — builds automatically from whatever text is in that card
-    var partyCard = document.getElementById('venue-party');
-    var partyMapLink = document.getElementById('map-link-party');
-    if (partyMapLink && partyCard) {
-      var partyBits = [];
-      partyCard.querySelectorAll('h3, p').forEach(function(p){ partyBits.push(p.textContent.trim()); });
-      partyMapLink.href = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(partyBits.join(', '));
     }
 
     // Ceremony venue map link — address not confirmed yet, so show a friendly message instead
