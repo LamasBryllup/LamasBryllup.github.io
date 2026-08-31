@@ -353,20 +353,77 @@
     font-family:'Jost',sans-serif;
     font-size:1.1rem;
     color:var(--gold);
-    transition:transform 0.3s ease;
     flex-shrink:0;
   }
-  .t-item.open .t-icon{transform:rotate(45deg);}
-  .t-details{
-    max-height:0;
-    overflow:hidden;
-    transition:max-height 0.35s ease;
+  .t-details{display:none;} /* content lives here but is shown in the popup, not inline */
+
+  /* ---------- Program popup ---------- */
+  #program-modal{
+    position:fixed;
+    inset:0;
+    z-index:1000;
+    background:rgba(20,14,8,0.6);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    opacity:0;
+    visibility:hidden;
+    transition:opacity 0.3s ease, visibility 0.3s ease;
+    padding:24px;
   }
-  .t-item.open .t-details{max-height:220px;}
-  .t-details-inner{
-    padding-top:10px;
-    font-size:0.9rem;
+  #program-modal.open{opacity:1;visibility:visible;}
+  #program-modal .pm-card{
+    position:relative;
+    background:var(--beige);
+    border-radius:8px;
+    padding:34px 30px;
+    max-width:360px;
+    width:100%;
+    text-align:center;
+    box-shadow:0 16px 44px rgba(0,0,0,0.35);
+  }
+  #program-modal .pm-close{
+    position:absolute;
+    top:12px;
+    right:12px;
+    width:30px;
+    height:30px;
+    border-radius:50%;
+    border:none;
+    background:rgba(0,0,0,0.08);
+    color:var(--forest);
+    font-size:1.2rem;
+    line-height:1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+  }
+  #program-modal .pm-close:hover{background:rgba(0,0,0,0.16);}
+  #program-modal .pm-time{
+    font-family:'Cormorant Garamond',serif;
+    font-size:1.8rem;
+    color:var(--forest);
+  }
+  #program-modal .pm-label{
+    font-size:0.95rem;
+    letter-spacing:0.03em;
+    color:var(--gold);
+    text-transform:uppercase;
+    margin:4px 0 16px;
+  }
+  #program-modal .pm-image{
+    display:none;
+    width:100%;
+    max-height:260px;
+    object-fit:cover;
+    border-radius:6px;
+    margin-bottom:16px;
+  }
+  #program-modal .pm-text{
+    font-size:0.95rem;
     color:var(--muted);
+    line-height:1.6;
   }
 
   /* ---------- Venue ---------- */
@@ -865,7 +922,7 @@
         </button>
         <div class="t-details"><div class="t-details-inner">Mere information følger.</div></div>
       </div>
-      <div class="t-item">
+      <div class="t-item" data-image="images/menu.jpg">
         <button class="t-header" type="button">
           <span class="t-time">17:30</span>
           <span class="t-label">Middag</span>
@@ -899,6 +956,16 @@
       </div>
     </div>
   </section>
+
+  <div id="program-modal">
+    <div class="pm-card">
+      <button class="pm-close" id="pm-close" aria-label="Luk">&times;</button>
+      <div class="pm-time" id="pm-time"></div>
+      <div class="pm-label" id="pm-label"></div>
+      <img class="pm-image" id="pm-image" src="" alt="">
+      <div class="pm-text" id="pm-text"></div>
+    </div>
+  </div>
 
   <div class="divider"><div class="line"></div><svg class="sprig" viewBox="0 0 64 64"><path d="M32 58 C32 40 32 24 32 6"></path><path class="leaf" d="M32 14 C24 12 18 16 16 24 C24 25 30 21 32 14 Z"></path><path class="leaf" d="M32 34 C24 32 18 36 16 44 C24 45 30 41 32 34 Z"></path></svg><div class="line"></div></div>
 
@@ -1192,13 +1259,49 @@
       });
     });
 
-    // Program timeline accordion — works automatically for any number of .t-item entries
+    // Program timeline popup — works automatically for any number of .t-item entries
+    var pmModal = document.getElementById('program-modal');
+    var pmClose = document.getElementById('pm-close');
+    var pmTime = document.getElementById('pm-time');
+    var pmLabel = document.getElementById('pm-label');
+    var pmImage = document.getElementById('pm-image');
+    var pmText = document.getElementById('pm-text');
+
+    function openProgramModal(item){
+      var time = item.querySelector('.t-time').textContent;
+      var label = item.querySelector('.t-label').textContent;
+      var text = item.querySelector('.t-details-inner').textContent;
+      var imageSrc = item.getAttribute('data-image');
+
+      pmTime.textContent = time;
+      pmLabel.textContent = label;
+      pmText.textContent = text;
+
+      pmImage.style.display = 'none';
+      pmImage.src = '';
+      if (imageSrc) {
+        pmImage.onload = function(){ pmImage.style.display = 'block'; };
+        pmImage.onerror = function(){ pmImage.style.display = 'none'; }; // file not uploaded yet — just skip it
+        pmImage.src = imageSrc;
+      }
+
+      pmModal.classList.add('open');
+    }
+    function closeProgramModal(){
+      pmModal.classList.remove('open');
+    }
+
     document.querySelectorAll('#program-timeline .t-item').forEach(function(item){
       item.querySelector('.t-header').addEventListener('click', function(){
-        var wasOpen = item.classList.contains('open');
-        document.querySelectorAll('#program-timeline .t-item').forEach(function(i){ i.classList.remove('open'); });
-        if (!wasOpen) item.classList.add('open');
+        openProgramModal(item);
       });
+    });
+    pmClose.addEventListener('click', closeProgramModal);
+    pmModal.addEventListener('click', function(e){
+      if (e.target === pmModal) closeProgramModal();
+    });
+    document.addEventListener('keydown', function(e){
+      if (pmModal.classList.contains('open') && e.key === 'Escape') closeProgramModal();
     });
   })();
 
