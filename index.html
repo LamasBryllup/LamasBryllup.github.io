@@ -827,13 +827,13 @@
     /* Hide anything interactive, decorative, or not requested for print */
     #gate, .gate-flower, .ivy-edge, .theme-toggle-wrap,
     #lightbox, #program-modal, .hero-slideshow, .photo-slider,
-    .scroll-cue, .countdown, .divider,
+    .scroll-cue, .countdown, .divider, .sprig,
     #rsvp, #billeder, footer{
       display:none !important;
     }
 
-    /* Venue: address text only, no photos, no map links, no box around the card */
-    .venue-card{background:transparent !important;border:none !important;padding:6px 0 !important;text-align:left !important;}
+    /* Venue: address text only, no photos, no map links, no box around the card, centered */
+    .venue-card{background:transparent !important;border:none !important;padding:6px 0 !important;text-align:center !important;}
     .venue-card.venue-photo{background-image:none !important;}
     .venue-card.venue-photo::before{display:none !important;}
     .venue-card.venue-photo h3,
@@ -856,14 +856,23 @@
     .faq-a{max-height:none !important;}
     .faq-q .icon{display:none !important;}
 
+    /* Spørgsmål og svar starts fresh on page 2, since it won't fit alongside the rest on page 1 */
+    #info{
+      break-before:page;
+      page-break-before:always;
+    }
+
     /* Program: time + title only — the popup content simply isn't in the printed flow */
     .t-icon{display:none !important;}
     .program-print-cta{display:none !important;}
 
+    /* Scroll-in animation leaves sections invisible until scrolled past — force them visible for print */
+    .reveal{opacity:1 !important;transform:none !important;}
+
     /* Belt-and-suspenders: no photos at all on the printed version */
     #site img{display:none !important;}
 
-    /* Tighter overall vertical rhythm so the program + venue + FAQ can fit one page */
+    /* Tighter overall vertical rhythm so the program + venue can fit one page */
     .section-intro{margin:0 auto 14px !important;font-size:0.9rem !important;}
     h2{margin-bottom:10px !important;font-size:1.5rem !important;}
     .t-item{padding-bottom:12px !important;}
