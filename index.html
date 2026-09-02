@@ -832,13 +832,25 @@
       display:none !important;
     }
 
-    /* Venue: address text only, no photos, no map links */
-    .venue-card{background:#fff !important;border:1px solid #ccc !important;}
+    /* Venue: address text only, no photos, no map links, no box around the card */
+    .venue-card{background:transparent !important;border:none !important;padding:6px 0 !important;text-align:left !important;}
     .venue-card.venue-photo{background-image:none !important;}
     .venue-card.venue-photo::before{display:none !important;}
     .venue-card.venue-photo h3,
     .venue-card.venue-photo p{color:#000 !important;text-shadow:none !important;}
     .venue-actions{display:none !important;}
+
+    /* Hero: names on one line */
+    #hero .amp{display:inline !important;font-size:0.7em !important;margin:0 8px !important;}
+    #hero h1{font-size:2.6rem !important;}
+
+    /* Hide the eyebrow labels for Sted / Program / Praktisk, keep the headings */
+    #sted .eyebrow, #program .eyebrow, #info .eyebrow{display:none !important;}
+
+    /* FAQ: no divider lines, tighter but not cramped */
+    .faq-item{border:none !important;}
+    .faq-q{padding:8px 0 !important;}
+    .faq-a-inner{padding:0 0 8px !important;}
 
     /* FAQ: force all answers visible (accordion state doesn't apply on paper) */
     .faq-a{max-height:none !important;}
@@ -850,6 +862,12 @@
 
     /* Belt-and-suspenders: no photos at all on the printed version */
     #site img{display:none !important;}
+
+    /* Tighter overall vertical rhythm so the program + venue + FAQ can fit one page */
+    .section-intro{margin:0 auto 14px !important;font-size:0.9rem !important;}
+    h2{margin-bottom:10px !important;font-size:1.5rem !important;}
+    .t-item{padding-bottom:12px !important;}
+    .timeline{padding-left:22px !important;}
 
     section{padding:16px 0 !important;}
     #hero{min-height:0 !important;padding:20px 0 !important;}
