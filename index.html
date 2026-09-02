@@ -328,6 +328,25 @@
     text-align:center;
     margin-top:30px;
   }
+  .print-program-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:9px;
+    background:var(--forest);
+    color:var(--cream);
+    border:none;
+    padding:12px 26px;
+    border-radius:2px;
+    font-family:'Jost',sans-serif;
+    font-size:0.78rem;
+    letter-spacing:0.09em;
+    text-transform:uppercase;
+    font-weight:500;
+    cursor:pointer;
+    transition:filter 0.3s ease;
+  }
+  .print-program-btn:hover{filter:brightness(0.9);}
+  .print-program-btn .print-icon{flex-shrink:0;}
   .t-item{
     position:relative;
     padding-bottom:24px;
@@ -1037,7 +1056,7 @@
   <section id="program">
     <div class="eyebrow">Dagens program</div>
     <h2>Program</h2>
-    <p class="section-intro">Et foreløbigt overblik over dagen — de præcise tider følger, når det hele er på plads.</p>
+    <p class="section-intro">Et foreløbigt overblik over dagen, de præcise tider følger, når det hele er på plads.</p>
     <div class="timeline" id="program-timeline">
       <div class="t-item" data-image="images/vielse.jpg">
         <button class="t-header" type="button">
@@ -1065,7 +1084,7 @@
       </div>
       <div class="t-item" data-image="images/fest.jpg">
         <button class="t-header" type="button">
-          <span class="t-time">21:00</span>
+          <span class="t-time">21:30</span>
           <span class="t-label">Fest og dans</span>
           <span class="t-icon" aria-hidden="true">+</span>
         </button>
@@ -1073,7 +1092,7 @@
       </div>
       <div class="t-item" data-image="images/natmad.jpg">
         <button class="t-header" type="button">
-          <span class="t-time">00:30</span>
+          <span class="t-time">01:00</span>
           <span class="t-label">Natmad</span>
           <span class="t-icon" aria-hidden="true">+</span>
         </button>
@@ -1089,7 +1108,14 @@
       </div>
     </div>
     <div class="program-print-cta">
-      <button type="button" id="print-program-btn" class="map-btn">Print programmet for dagen ud</button>
+      <button type="button" id="print-program-btn" class="print-program-btn">
+        <svg class="print-icon" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 9V3h12v6"></path>
+          <rect x="6" y="13" width="12" height="8"></rect>
+          <path d="M6 13H3a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h18a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-3"></path>
+        </svg>
+        Print programmet for dagen ud
+      </button>
     </div>
   </section>
 
@@ -1112,7 +1138,7 @@
     <div id="faq-list">
       <div class="faq-item">
         <button class="faq-q"><span>Transport</span><span class="icon">+</span></button>
-        <div class="faq-a"><div class="faq-a-inner">Ertebølle - Kongeportsvej 14 ligger ikke i nærheden af busruter eller anden offentlig transport. Vi anbefaler derfor, at I snakker sammen om fælles kørsel i bil derud.</div></div>
+        <div class="faq-a"><div class="faq-a-inner">Ertebølle, Kongeportsvej 14 ligger ikke i nærheden af busruter eller anden offentlig transport. Vi anbefaler derfor, at I snakker sammen om fælles kørsel i bil derud.</div></div>
       </div>
       <div class="faq-item">
         <button class="faq-q"><span>Overnatning</span><span class="icon">+</span></button>
@@ -1135,15 +1161,15 @@
       </div>
       <div class="faq-item">
         <button class="faq-q"><span>Børn</span><span class="icon">+</span></button>
-        <div class="faq-a"><div class="faq-a-inner">Vi holder et børnefrit bryllup, så husk at få fat i en barnepige i god tid — så I kan danse natten væk uden bekymringer! 😊</div></div>
+        <div class="faq-a"><div class="faq-a-inner">Vi holder et børnefrit bryllup, så husk at få fat i en barnepasser i god tid, så I kan danse natten væk uden bekymringer!</div></div>
       </div>
       <div class="faq-item">
         <button class="faq-q"><span>Vejret</span><span class="icon">+</span></button>
-        <div class="faq-a"><div class="faq-a-inner">Vi krydser fingre for godt vejr — men tag gerne et ekstra lag med.</div></div>
+        <div class="faq-a"><div class="faq-a-inner">Vi krydser fingre for godt vejr, men tag gerne et ekstra lag med.</div></div>
       </div>
       <div class="faq-item">
         <button class="faq-q"><span>Kontakt</span><span class="icon">+</span></button>
-        <div class="faq-a"><div class="faq-a-inner">Spørgsmål? Skriv til os direkte — kontaktinfo følger her.</div></div>
+        <div class="faq-a"><div class="faq-a-inner">Lau<br>30 11 16 39<br>lau.lau@live.dk<br><br>Amalie<br>20 54 06 54<br>amaliecarlslund15@gmail.com</div></div>
       </div>
     </div>
   </section>
@@ -1154,7 +1180,7 @@
   <section id="billeder">
     <div class="eyebrow">Minder</div>
     <h2>Billeder</h2>
-    <p class="section-intro">Snart fyldt med billeder af os — indtil videre pladsholdere.</p>
+    <p class="section-intro">Snart fyldt med billeder af os, indtil videre pladsholdere.</p>
     <div class="gallery-grid" id="gallery-grid">
       <button class="tile" data-index="0"><span>Billede 1</span></button>
       <button class="tile" data-index="1"><span>Billede 2</span></button>
@@ -1189,7 +1215,7 @@
 <script>
   // ===== UPDATE THIS when the real date & time is set (24h format, local time) =====
   // Format: "YYYY-MM-DDTHH:MM:SS" (24h, local time). Set to null to hide the countdown.
-  var WEDDING_DATE = "2027-07-31T14:00:00";
+  var WEDDING_DATE = "2027-07-31T11:00:00";
 
   // ===== UPDATE THIS once your shared Google Photos album is created =====
   // Paste the "anyone with the link can add photos" share link here. Leave as "#" until ready — the button will just be hidden.
