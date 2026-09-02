@@ -806,6 +806,49 @@
     html{scroll-behavior:auto;}
     *{transition:none !important;}
   }
+
+  /* ---------- Print ---------- */
+  @media print{
+    :root, :root[data-theme="night"]{
+      --cream:#ffffff;
+      --beige:#ffffff;
+      --forest:#000000;
+      --gold:#000000;
+      --text:#000000;
+      --muted:#333333;
+      --line:#cccccc;
+    }
+    body{background:#fff !important;}
+
+    /* Hide anything interactive, decorative, or not requested for print */
+    #gate, .gate-flower, .ivy-edge, .theme-toggle-wrap,
+    #lightbox, #program-modal, .hero-slideshow, .photo-slider,
+    .scroll-cue, .countdown, .divider,
+    #rsvp, #billeder, footer{
+      display:none !important;
+    }
+
+    /* Venue: address text only, no photos, no map links */
+    .venue-card{background:#fff !important;border:1px solid #ccc !important;}
+    .venue-card.venue-photo{background-image:none !important;}
+    .venue-card.venue-photo::before{display:none !important;}
+    .venue-card.venue-photo h3,
+    .venue-card.venue-photo p{color:#000 !important;text-shadow:none !important;}
+    .venue-actions{display:none !important;}
+
+    /* FAQ: force all answers visible (accordion state doesn't apply on paper) */
+    .faq-a{max-height:none !important;}
+    .faq-q .icon{display:none !important;}
+
+    /* Program: time + title only — the popup content simply isn't in the printed flow */
+    .t-icon{display:none !important;}
+
+    /* Belt-and-suspenders: no photos at all on the printed version */
+    #site img{display:none !important;}
+
+    section{padding:16px 0 !important;}
+    #hero{min-height:0 !important;padding:20px 0 !important;}
+  }
 </style>
 </head>
 <body>
