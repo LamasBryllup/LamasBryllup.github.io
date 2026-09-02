@@ -847,6 +847,17 @@
     /* Hide the eyebrow labels for Sted / Program / Praktisk, keep the headings */
     #sted .eyebrow, #program .eyebrow, #info .eyebrow{display:none !important;}
 
+    /* Program: center all items, matching the venue */
+    .timeline{
+      padding-left:0 !important;
+      border-left:none !important;
+      max-width:400px !important;
+      margin:0 auto !important;
+    }
+    .t-item::before{display:none !important;}
+    .t-header{justify-content:center !important;}
+    .t-label{flex:none !important;}
+
     /* FAQ: no divider lines, tighter but not cramped */
     .faq-item{border:none !important;}
     .faq-q{padding:8px 0 !important;}
@@ -1291,6 +1302,7 @@
 </script>
 <script>
   (function(){
+    // Kalle, du har en adgangskode i din invitation, brug den i stedet for det her, hehe
     var PASSWORD_G1 = "Lama2027";  // G1 — all guests
     var PASSWORD_G2 = "Telt123";   // G2 — small guest group
     var gate = document.getElementById('gate');
