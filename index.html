@@ -324,6 +324,10 @@
     padding-left:28px;
     border-left:1px solid var(--line);
   }
+  .program-print-cta{
+    text-align:center;
+    margin-top:30px;
+  }
   .t-item{
     position:relative;
     padding-bottom:24px;
@@ -842,6 +846,7 @@
 
     /* Program: time + title only — the popup content simply isn't in the printed flow */
     .t-icon{display:none !important;}
+    .program-print-cta{display:none !important;}
 
     /* Belt-and-suspenders: no photos at all on the printed version */
     #site img{display:none !important;}
@@ -1044,6 +1049,9 @@
         </button>
         <div class="t-details"><div class="t-details-inner">Mere information følger.</div></div>
       </div>
+    </div>
+    <div class="program-print-cta">
+      <button type="button" id="print-program-btn" class="map-btn">Print programmet for dagen ud</button>
     </div>
   </section>
 
@@ -1342,6 +1350,14 @@
         if (!wasOpen) item.classList.add('open');
       });
     });
+
+    // Print the program
+    var printProgramBtn = document.getElementById('print-program-btn');
+    if (printProgramBtn) {
+      printProgramBtn.addEventListener('click', function(){
+        window.print();
+      });
+    }
 
     // Program timeline popup — works automatically for any number of .t-item entries
     var pmModal = document.getElementById('program-modal');
