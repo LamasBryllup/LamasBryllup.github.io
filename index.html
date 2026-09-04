@@ -614,12 +614,12 @@
     height:100%;
     object-fit:cover;
     opacity:0;
-    transition:opacity 0.6s ease, transform 0.3s ease;
+    transition:opacity 1s ease, transform 0.3s ease;
   }
+  .gallery-grid .tile img.active{opacity:1;}
   .gallery-grid .tile.has-photo{cursor:pointer;}
-  .gallery-grid .tile.has-photo img{opacity:1;}
   .gallery-grid .tile.has-photo span{display:none;}
-  .gallery-grid .tile.has-photo:hover img{transform:scale(1.05);}
+  .gallery-grid .tile.has-photo:hover img.active{transform:scale(1.05);}
   .gallery-grid .tile:nth-child(3n+2){opacity:0.85;}
   .gallery-grid .tile:nth-child(3n){opacity:0.7;}
   .gallery-grid .tile.has-photo{opacity:1 !important;}
@@ -1524,46 +1524,84 @@
       if (e.key === 'ArrowRight') step(1);
     });
 
-    return { open: openAt };
+    return {
+      open: openAt,
+      isOpen: function(){ return lightbox.classList.contains('open'); }
+    };
   })();
 
-  // ===== Gallery photos: add filenames here (upload into your "images" folder, same as the hero photos) =====
+  // ===== Gallery photo pool: 24 photos shared across the 8 frames (3 each, shuffled on load) =====
+  // Upload all 24 into your "images" folder with these exact filenames.
   var GALLERY_PHOTOS = [
-    "images/gallery-1.jpg",
-    "images/gallery-2.jpg",
-    "images/gallery-3.jpg",
-    "images/gallery-4.jpg",
-    "images/gallery-5.jpg",
-    "images/gallery-6.jpg",
-    "images/gallery-7.jpg",
-    "images/gallery-8.jpg"
+    "images/gallery-1.jpg", "images/gallery-2.jpg", "images/gallery-3.jpg", "images/gallery-4.jpg",
+    "images/gallery-5.jpg", "images/gallery-6.jpg", "images/gallery-7.jpg", "images/gallery-8.jpg",
+    "images/gallery-9.jpg", "images/gallery-10.jpg", "images/gallery-11.jpg", "images/gallery-12.jpg",
+    "images/gallery-13.jpg", "images/gallery-14.jpg", "images/gallery-15.jpg", "images/gallery-16.jpg",
+    "images/gallery-17.jpg", "images/gallery-18.jpg", "images/gallery-19.jpg", "images/gallery-20.jpg",
+    "images/gallery-21.jpg", "images/gallery-22.jpg", "images/gallery-23.jpg", "images/gallery-24.jpg"
   ];
+  var GALLERY_PHOTOS_PER_TILE = 3;
+  var GALLERY_CYCLE_MS = 9000; // how often each tile's photo changes
 
   (function(){
     var tiles = document.querySelectorAll('#gallery-grid .tile');
-    var loaded = {}; // index -> src, only photos that actually loaded
+    if (!tiles.length) return;
 
+    // Shuffle a copy of the pool, then split into one group per tile
+    var pool = GALLERY_PHOTOS.slice();
+    for (var i = pool.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = pool[i]; pool[i] = pool[j]; pool[j] = tmp;
+    }
+    var groups = [];
     tiles.forEach(function(tile, i){
-      var src = GALLERY_PHOTOS[i];
-      if (!src) return;
-      var img = new Image();
-      img.src = src;
-      img.alt = '';
-      img.addEventListener('load', function(){
-        tile.insertBefore(img, tile.firstChild);
-        tile.classList.add('has-photo');
-        loaded[i] = src;
-      });
-      // Not uploaded yet? Tile just keeps showing its "Billede N" placeholder text.
+      groups.push(pool.slice(i * GALLERY_PHOTOS_PER_TILE, (i + 1) * GALLERY_PHOTOS_PER_TILE));
     });
 
-    tiles.forEach(function(tile, i){
+    tiles.forEach(function(tile, tileIndex){
+      var group = groups[tileIndex];
+      var imgs = [];
+      var current = 0;
+      var loadedCount = 0;
+
+      group.forEach(function(src){
+        var img = document.createElement('img');
+        img.alt = '';
+        img.addEventListener('load', function(){
+          loadedCount++;
+          if (loadedCount === 1) {
+            img.classList.add('active');
+            tile.classList.add('has-photo');
+          }
+        });
+        // Missing file? It just never becomes active — silently skipped.
+        img.src = src;
+        tile.insertBefore(img, tile.firstChild);
+        imgs.push(img);
+      });
+
+      // Independent crossfade cycle per tile, paused while the lightbox is open
+      var startDelay = Math.floor(Math.random() * GALLERY_CYCLE_MS);
+      setTimeout(function(){
+        setInterval(function(){
+          if (!imgs.length || (window.WeddingLightbox && window.WeddingLightbox.isOpen())) return;
+          imgs[current].classList.remove('active');
+          current = (current + 1) % imgs.length;
+          if (imgs[current].complete && imgs[current].naturalWidth > 0) {
+            imgs[current].classList.add('active');
+          } else {
+            imgs[0].classList.add('active');
+            current = 0;
+          }
+        }, GALLERY_CYCLE_MS);
+      }, startDelay);
+
       tile.addEventListener('click', function(){
-        var keys = Object.keys(loaded).map(Number).sort(function(a,b){return a-b;});
-        if (!keys.length || loaded[i] === undefined) return;
-        var orderedPhotos = keys.map(function(k){ return loaded[k]; });
-        var pos = keys.indexOf(i);
-        WeddingLightbox.open(orderedPhotos, pos);
+        var loadedSrcs = imgs.filter(function(im){ return im.complete && im.naturalWidth > 0; }).map(function(im){ return im.src; });
+        if (!loadedSrcs.length) return;
+        var currentSrc = imgs[current].src;
+        var startPos = loadedSrcs.indexOf(currentSrc);
+        WeddingLightbox.open(loadedSrcs, startPos > -1 ? startPos : 0);
       });
     });
   })();
