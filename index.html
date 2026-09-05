@@ -1531,7 +1531,7 @@
   })();
 
   // ===== Gallery photo pool: 16 photos shared across the 8 frames (2 each, shuffled on load) =====
-  // Upload all 24 into your "images" folder with these exact filenames.
+  // Upload all 16 into your "images" folder with these exact filenames.
   var GALLERY_PHOTOS = [
     "images/gallery-1.jpg", "images/gallery-2.jpg", "images/gallery-3.jpg", "images/gallery-4.jpg",
     "images/gallery-5.jpg", "images/gallery-6.jpg", "images/gallery-7.jpg", "images/gallery-8.jpg",
@@ -1561,6 +1561,10 @@
       return img.complete && img.naturalWidth > 0;
     }
 
+    // Tracks which of the full 16 have actually loaded, regardless of which tile they're in —
+    // used so the lightbox can browse the whole gallery, not just one tile's 2 photos.
+    var loadedMap = {};
+
     tiles.forEach(function(tile, tileIndex){
       var group = groups[tileIndex];
       var imgs = [];
@@ -1570,6 +1574,7 @@
         var img = document.createElement('img');
         img.alt = '';
         img.addEventListener('load', function(){
+          loadedMap[src] = true;
           if (current === -1) {
             current = idx;
             img.classList.add('active');
@@ -1606,11 +1611,13 @@
       }, startDelay);
 
       tile.addEventListener('click', function(){
-        var loadedSrcs = imgs.filter(isLoaded).map(function(im){ return im.src; });
-        if (!loadedSrcs.length) return;
+        if (current === -1) return;
         var currentSrc = imgs[current].src;
-        var startPos = loadedSrcs.indexOf(currentSrc);
-        WeddingLightbox.open(loadedSrcs, startPos > -1 ? startPos : 0);
+        // Browse the entire gallery pool (in stable pool order), not just this tile's photos
+        var allLoadedSrcs = GALLERY_PHOTOS.filter(function(src){ return loadedMap[src]; });
+        if (!allLoadedSrcs.length) return;
+        var startPos = allLoadedSrcs.indexOf(currentSrc);
+        WeddingLightbox.open(allLoadedSrcs, startPos > -1 ? startPos : 0);
       });
     });
   })();
