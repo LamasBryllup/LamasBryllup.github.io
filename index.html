@@ -1149,7 +1149,7 @@
       </div>
       <div class="faq-item">
         <button class="faq-q"><span>Toastmaster</span><span class="icon">+</span></button>
-        <div class="faq-a"><div class="faq-a-inner">Vores toastmaster annonceres snart og styrer talerækken til middagen. Har du lyst til at holde en tale, så sig endelig til.</div></div>
+        <div class="faq-a"><div class="faq-a-inner">Vores toastmaster på dagen er Christian, som styrer talerækken og holder styr på programmet under middagen, så aftenen glider fint fra start til slut. Har du lyst til at holde en tale eller vil du bare gerne vide, hvornår der er plads til din tale, så tag endelig fat i ham i god tid.<br><br>Christian<br>53 50 04 02<br>chr.b.winkler@gmail.com</div></div>
       </div>
       <div class="faq-item">
         <button class="faq-q"><span>Dresscode</span><span class="icon">+</span></button>
@@ -1541,7 +1541,8 @@
     "images/gallery-21.jpg", "images/gallery-22.jpg", "images/gallery-23.jpg", "images/gallery-24.jpg"
   ];
   var GALLERY_PHOTOS_PER_TILE = 3;
-  var GALLERY_CYCLE_MS = 5000; // how often each tile's photo changes
+  var GALLERY_CYCLE_MIN_MS = 5000;
+  var GALLERY_CYCLE_MAX_MS = 8000;
 
   (function(){
     var tiles = document.querySelectorAll('#gallery-grid .tile');
@@ -1558,46 +1559,56 @@
       groups.push(pool.slice(i * GALLERY_PHOTOS_PER_TILE, (i + 1) * GALLERY_PHOTOS_PER_TILE));
     });
 
+    function isLoaded(img){
+      return img.complete && img.naturalWidth > 0;
+    }
+
     tiles.forEach(function(tile, tileIndex){
       var group = groups[tileIndex];
       var imgs = [];
-      var current = 0;
-      var loadedCount = 0;
+      var current = -1; // index of whichever image is actually showing right now
 
-      group.forEach(function(src){
+      group.forEach(function(src, idx){
         var img = document.createElement('img');
         img.alt = '';
         img.addEventListener('load', function(){
-          loadedCount++;
-          if (loadedCount === 1) {
+          if (current === -1) {
+            current = idx;
             img.classList.add('active');
             tile.classList.add('has-photo');
           }
         });
-        // Missing file? It just never becomes active — silently skipped.
+        // Missing file? It just never loads, and gets skipped when cycling.
         img.src = src;
         tile.insertBefore(img, tile.firstChild);
         imgs.push(img);
       });
 
-      // Independent crossfade cycle per tile, paused while the lightbox is open
-      var startDelay = Math.floor(Math.random() * GALLERY_CYCLE_MS);
+      // Independent crossfade cycle per tile, own random speed (5-8s), paused while lightbox is open
+      var cycleMs = GALLERY_CYCLE_MIN_MS + Math.floor(Math.random() * (GALLERY_CYCLE_MAX_MS - GALLERY_CYCLE_MIN_MS));
+      var startDelay = Math.floor(Math.random() * cycleMs);
+
       setTimeout(function(){
         setInterval(function(){
           if (!imgs.length || (window.WeddingLightbox && window.WeddingLightbox.isOpen())) return;
-          imgs[current].classList.remove('active');
-          current = (current + 1) % imgs.length;
-          if (imgs[current].complete && imgs[current].naturalWidth > 0) {
-            imgs[current].classList.add('active');
-          } else {
-            imgs[0].classList.add('active');
-            current = 0;
+          if (current === -1) return; // nothing loaded yet
+
+          // Find the next loaded image after "current", wrapping around; skip if none other exists
+          var next = current;
+          for (var step = 1; step <= imgs.length; step++) {
+            var candidate = (current + step) % imgs.length;
+            if (isLoaded(imgs[candidate])) { next = candidate; break; }
           }
-        }, GALLERY_CYCLE_MS);
+          if (next === current) return; // only one valid photo in this tile — nothing to change to
+
+          imgs[current].classList.remove('active');
+          imgs[next].classList.add('active');
+          current = next;
+        }, cycleMs);
       }, startDelay);
 
       tile.addEventListener('click', function(){
-        var loadedSrcs = imgs.filter(function(im){ return im.complete && im.naturalWidth > 0; }).map(function(im){ return im.src; });
+        var loadedSrcs = imgs.filter(isLoaded).map(function(im){ return im.src; });
         if (!loadedSrcs.length) return;
         var currentSrc = imgs[current].src;
         var startPos = loadedSrcs.indexOf(currentSrc);
