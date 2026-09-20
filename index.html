@@ -1080,7 +1080,7 @@
           <span class="t-label">Middag</span>
           <span class="t-icon" aria-hidden="true">+</span>
         </button>
-        <div class="t-details"><div class="t-details-inner">Menuen annonceres snart.</div></div>
+        <div class="t-details"><div class="t-details-inner"><strong>Forret</strong> · Tzatziki · Focaccia-brød · Hummus med stave af agurk og gulerødder<br><br><strong>Hovedret</strong> · Græske kartofler og flødekartofler · Souvlaki, små græske bøffer og langtidsstegt lammekølle med rosmarin og hvidløg · Græsk salat og fladbrød<br><br><strong>Dessert</strong> · Græsk yoghurt rørt med vanilje og friske bær</div></div>
       </div>
       <div class="t-item" data-image="images/fest.jpg">
         <button class="t-header" type="button">
@@ -1180,7 +1180,7 @@
   <section id="billeder">
     <div class="eyebrow">Minder</div>
     <h2>Billeder</h2>
-    <p class="section-intro">Billederne fra festen vil bliver uploadet her, indtil videre er dette pladsholdere.</p>
+    <p class="section-intro">Snart fyldt med billeder af os, indtil videre pladsholdere.</p>
     <div class="gallery-grid" id="gallery-grid">
       <button class="tile" data-index="0"><span>Billede 1</span></button>
       <button class="tile" data-index="1"><span>Billede 2</span></button>
@@ -1449,12 +1449,12 @@
     function openProgramModal(item){
       var time = item.querySelector('.t-time').textContent;
       var label = item.querySelector('.t-label').textContent;
-      var text = item.querySelector('.t-details-inner').textContent;
+      var text = item.querySelector('.t-details-inner').innerHTML;
       var imageSrc = item.getAttribute('data-image');
 
       pmTime.textContent = time;
       pmLabel.textContent = label;
-      pmText.textContent = text;
+      pmText.innerHTML = text;
 
       pmImage.style.display = 'none';
       pmImage.src = '';
